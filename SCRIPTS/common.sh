@@ -2,6 +2,7 @@ BIND_IP=${BIND_IP:-0.0.0.0}
 BIND_PORT=${BIND_PORT:-0}
 ROUTER_IP=${ROUTER_IP:-35.176.200.197}
 ROUTER_PORT=${ROUTER_PORT:-32450}
+ROUTER_INTERSPACE_USEC=${ROUTER_INTERSPACE_USEC:-0}
 
 if      [[ "$OSTYPE" == "linux-gnu" ]]; then    MD5SUM=md5sum
 elif    [[ "$OSTYPE" == "FreeBSD" ]]; then      MD5SUM=md5
