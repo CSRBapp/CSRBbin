@@ -5,7 +5,6 @@ source $(dirname $0)/common.sh
 COMMAND_TIMEOUT=${COMMAND_TIMEOUT:+,commandTimeoutMS=${COMMAND_TIMEOUT}}
 NODEID=${NODEID:+,nodeID=${NODEID}}
 STORAGE_PATH=${STORAGE_PATH:+,storagePath=${STORAGE_PATH}}
-MOUNTPOINT=${MOUNTPOINT:-/mnt/CSRB}
 
 if [ ! -x $1 ]
 then
