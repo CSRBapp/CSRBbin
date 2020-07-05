@@ -14,7 +14,6 @@ fi
 
 $1 -o \
 nodev,\
-allow_other,\
 bindHost=${BIND_IP},\
 bindPort=${BIND_PORT},\
 routerHost=${ROUTER_IP},\
