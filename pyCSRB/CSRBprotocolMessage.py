@@ -10,12 +10,20 @@ class ObjectID(ctypes.Structure):
 	def __str__(self):
 		return ''.join(format(x, '016X') for x in reversed(self.id))
 
+	def fromHexString(self, hexString):
+		self.id[1] = int(hexString[0:16], 16)
+		self.id[0] = int(hexString[16:32], 16)
+
 class SASnetID(ctypes.Structure):
 	_pack_ = 1
 	_fields_ = [("id", ctypes.c_ulonglong * 2)]
 
 	def __str__(self):
 		return ''.join(format(x, '016X') for x in reversed(self.id))
+
+	def fromHexString(self, hexString):
+		self.id[1] = int(hexString[0:16], 16)
+		self.id[0] = int(hexString[16:32], 16)
 
 class CSRBprotocolMessageHeaderParamType(ctypes.Structure):
 	_pack_ = 1
