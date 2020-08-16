@@ -4,7 +4,7 @@ source $(dirname $0)/common.sh
 
 if [ ! -x $1 ]
 then
-	echo "Invalid CSRBnode file provided."
+	echo "Invalid CSRBnode executable provided."
 	exit 1
 fi
 
