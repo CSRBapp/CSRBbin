@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 source $(dirname $0)/common.sh
 
@@ -18,6 +18,7 @@ bindHost=${BIND_IP},\
 bindPort=${BIND_PORT},\
 routerHost=${ROUTER_IP},\
 routerPort=${ROUTER_PORT},\
+routerInterspaceUSEC=${ROUTER_INTERSPACE_USEC},\
 nodeCAcertificateFile=${CA_CERT},\
 nodeCertificateFile=${NODE_CERT}\
 ${NODEID}\
