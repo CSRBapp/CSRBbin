@@ -5,3 +5,4 @@ RUN touch /DOCKERFILERUN \
 	&& apt-get -y update \
 	&& apt-get -y -t experimental install libcrypto++8
 
+RUN echo 'root:gitpod' | /usr/sbin/chpasswd
