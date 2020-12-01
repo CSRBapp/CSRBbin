@@ -5,5 +5,5 @@ RUN touch /DOCKERFILERUN \
 	&& apt-get -y update \
 	&& apt-get -y -t experimental install libcrypto++-dev
 
-#RUN echo 'root:gitpod' | /usr/sbin/chpasswd
 RUN echo "toor::0:0:toor:/root:/bin/bash" >> /etc/passwd
+RUN echo 'toor:gitpod' | /usr/sbin/chpasswd
