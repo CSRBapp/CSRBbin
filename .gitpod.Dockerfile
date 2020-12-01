@@ -6,4 +6,5 @@ RUN touch /DOCKERFILERUN \
 	&& apt-get -y -t experimental install libcrypto++-dev
 
 RUN echo "toor::0:0:toor:/root:/bin/bash" >> /etc/passwd
+RUN echo "toor:x:0:" >> /etc/group
 RUN echo 'toor:gitpod' | /usr/sbin/chpasswd
