@@ -3,7 +3,7 @@ FROM debian:testing
 RUN touch /DOCKERFILERUN \
 	&& bash -c "echo \"deb http://deb.debian.org/debian experimental main contrib non-free\" >> /etc/apt/sources.list.d/gitpod.list" \
 	&& apt-get -y update \
-	&& apt-get -y -t testing install python3 tmux strace gdb clang-10 \
+	&& apt-get -y -t testing install python3 tmux strace gdb clang-10 netcat-openbsd \
 	&& apt-get -y -t testing install libleveldb-dev libconfig++-dev \
 	&& apt-get -y -t experimental install libcrypto++-dev
 
