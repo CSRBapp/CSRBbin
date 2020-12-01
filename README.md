@@ -12,6 +12,7 @@ $ ./decrypt.sh
 
 ## Run pyCSRB Demo
 ```sh
+$ mkdir /tmp/CSRBSTORAGE
 $ cd pyCSRB
 $ LD_LIBRARY_PATH=../DEBIAN-TESTING python3 CSRBvfsDemo.py
 ```
