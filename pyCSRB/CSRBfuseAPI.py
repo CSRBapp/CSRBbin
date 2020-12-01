@@ -1,4 +1,5 @@
 # vim: set ts=8 sw=8 tw=0 noet :
+
 from CSRBprotocolMessage import *
 
 def CSRBmessageOpen(filename):
@@ -12,7 +13,7 @@ def CSRBmessageOpen(filename):
 
 def CSRBmessageClose(handle):
 	try:
-	    handle.close()
+		handle.close()
 	except OSError as e:
 		pass
 
@@ -52,7 +53,7 @@ def CSRBmessageReceive(handle):
 		if buf and len(buf) == m.messageSize():
 			m.fromBuf(buf)
 			#print("# MESSAGE DATA SIZE: " + str(m.header.dataSize))
-			#print("# MESSAGE DATA: " + str(m.data.decode('utf-8', errors='replace')))
+			#print("# MESSAGE DATA: " + str(m.data.decode("utf-8", errors='replace')))
 			return len(buf),m
 		elif buf:
 			print("*** INVALID MESSAGE RECEIVED")
