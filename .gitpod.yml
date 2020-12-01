@@ -1,2 +1,2 @@
-image: node:current-buster
+image:
   file: .gitpod.dockerfile
