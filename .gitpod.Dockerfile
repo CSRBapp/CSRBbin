@@ -1,14 +1,13 @@
 FROM node:current-buster
 
 RUN touch /DOCKERFILERUN \
+	&& bash -c "echo \"deb http://deb.debian.org/debian testing main contrib non-free\" >> /etc/apt/sources.list.d/gitpod.list" \
 	&& bash -c "echo \"deb http://deb.debian.org/debian experimental main contrib non-free\" >> /etc/apt/sources.list.d/gitpod.list" \
 	&& apt-get -y update \
-	&& apt-get -y -t experimental install libcrypto++-dev
+	&& apt-get -y -t testing install libleveldb1d \
+	&& apt-get -y -t experimental install libcrypto++8
 
-#RUN echo "toor::0:0:toor:/root:/bin/bash" >> /etc/passwd
-#RUN echo "toor:x:0:" >> /etc/group
+#RUN echo "toor::0:666:toor:/root:/bin/bash" >> /etc/passwd
+#RUN echo "toor:x:666:" >> /etc/group
 #RUN echo 'toor:gitpod' | /usr/sbin/chpasswd
 
-RUN echo "doptig::33333:33333::/home/gitpod:/bin/bash" >> /etc/passwd
-RUN apt-get -y install sudo && adduser doptig sudo
-RUN sed -i s/sudo/NOTsudo/g /var/lib/dpkg/status
