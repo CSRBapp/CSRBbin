@@ -1,0 +1,12 @@
+tasks:
+  - init: |
+      mkdir /tmp/CRYPTOPPBUILD
+      cd /tmp/CRYPTOPPBUILD
+      wget https://github.com/weidai11/cryptopp/archive/CRYPTOPP_8_2_0.tar.gz
+      tar -zxf CRYPTOPP_8_2_0.tar.gz
+      cd cryptopp-CRYPTOPP_8_2_0
+      make -j`nproc` shared
+      make install-lib
+      cd /tmp/
+      rm -rf CRYPTOPPBUILD
+      |
