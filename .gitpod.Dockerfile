@@ -1,4 +1,4 @@
-FROM gitpod/workspace-full
+FROM node:current-buster
 
 RUN sudo /usr/bin/touch /DOCKERFILERUN \
 	&& sudo bash -c "echo \"deb http://deb.debian.org/debian experimental main contrib non-free\" > /etc/apt/sources.list.d/experimental.list" \
