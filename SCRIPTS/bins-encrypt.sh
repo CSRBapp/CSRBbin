@@ -9,9 +9,8 @@ echo "ENCRYPTION PASSWORD: ${PASSWORDHASH}"
 for lib in *.so
 do
 	echo "Encrypting ${lib}"
-	openssl enc \
+	gzip -9 -c $lib | openssl enc \
 		-aes-256-cbc -md sha512 -pbkdf2 \
 		-pass pass:${PASSWORDHASH} \
-		-in $lib \
 		-out $lib.enc
 done
