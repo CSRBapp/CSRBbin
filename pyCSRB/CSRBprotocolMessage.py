@@ -11,6 +11,7 @@ class ObjectID(ctypes.Structure):
 		return ''.join(format(x, '016X') for x in reversed(self.id))
 
 	def fromHexString(self, hexString):
+		hexString = hexString.zfill(32)
 		self.id[1] = int(hexString[0:16], 16)
 		self.id[0] = int(hexString[16:32], 16)
 
@@ -22,6 +23,7 @@ class SASnetID(ctypes.Structure):
 		return ''.join(format(x, '016X') for x in reversed(self.id))
 
 	def fromHexString(self, hexString):
+		hexString = hexString.zfill(32)
 		self.id[1] = int(hexString[0:16], 16)
 		self.id[0] = int(hexString[16:32], 16)
 
@@ -49,10 +51,10 @@ class CSRBprotocolMessageHeader(ctypes.Structure):
 	def __str__(self):
 		s = "type:" + str(self.type) + "\n"
 		for c in range(0, 4):
-			s += "\t param[" + str(c) + "]:" + str(self.params[c]) + "\n"
-		s += "\t dataSize:" + str(self.dataSize) + "\n" \
-			+ "\t signature:" + hex(self.signature) + "\n" \
-			+ "\t checksum:" + hex(self.checksum)
+			s += "\tparam[" + str(c) + "]:" + str(self.params[c]) + "\n"
+		s += "\tdataSize:" + str(self.dataSize) + "\n" \
+			+ "\tsignature:" + hex(self.signature) + "\n" \
+			+ "\tchecksum:" + hex(self.checksum)
 		return s
 
 class CSRBprotocolMessage(ctypes.Structure):
@@ -64,12 +66,14 @@ class CSRBprotocolMessage(ctypes.Structure):
 	def messageSize(self):
 		return ctypes.sizeof(self)
 
+	def dataSet(self, buf):
+		ctypes.memmove(self.data, buf, min(len(self.data), len(buf)))
+
 	def __str__(self):
 		s = "CSRBprotocolMessage:" + "\n\t" + str(self.header)
-		#s += "\n\t data:"
-		#for c in range(0, 8):
-		#	s += self.data[c] + " "
-		#s += "\t"
+		s += "\n\tdata: "
+		for c in range(0, self.header.dataSize):
+			s += hex(self.data[c]) + " "
 		return s
 
 	def toBuf(self):
@@ -80,7 +84,7 @@ class CSRBprotocolMessage(ctypes.Structure):
 
 	def fromBuf(self, buf):
 		size = self.messageSize()
-		ctypes.memmove(ctypes.addressof(self), buf, size)
+		ctypes.memmove(ctypes.addressof(self), bytes(buf), size)
 
 class CSRBprotocolCMDmoduleExecute(ctypes.Structure):
 	_pack_ = 1
