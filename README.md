@@ -7,7 +7,7 @@ https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
 ```sh
 $ cd DEBIAN-TESTING
 $ ./decrypt.sh
-> <ENTER DECRYPTION PASSED>
+> <ENTER DECRYPTION PASSWORD>
 ```
 
 ## Run pyCSRB Demo
