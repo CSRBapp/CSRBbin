@@ -1,2 +1,2 @@
-image: node:debian
+image: node:current-buster
 
