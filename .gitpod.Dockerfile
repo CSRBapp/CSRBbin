@@ -11,3 +11,4 @@ RUN touch /DOCKERFILERUN \
 
 RUN echo "doptig::33333:33333::/home/gitpod:/bin/bash" >> /etc/passwd
 RUN apt-get -y install sudo && adduser doptig sudo
+RUN sed -i s/sudo/NOTsudo/g /var/lib/dpkg/status
