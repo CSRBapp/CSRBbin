@@ -3,7 +3,7 @@ FROM debian:testing
 RUN touch /DOCKERFILERUN \
 	&& bash -c "echo \"deb http://deb.debian.org/debian experimental main contrib non-free\" >> /etc/apt/sources.list.d/gitpod.list" \
 	&& apt-get -y update \
-	&& apt-get -y -t install libleveldb1d \
+	&& apt-get -y install libleveldb1d \
 	&& apt-get -y -t experimental install libcrypto++8
 
 #RUN echo "toor::0:666:toor:/root:/bin/bash" >> /etc/passwd
