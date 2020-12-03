@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 read -p "> " PASSWORD
 PASSWORDHASH=`echo -n ${PASSWORD} | sha512sum | awk '{ print $1 }'`
