@@ -30,7 +30,9 @@ CSRBvfsHandle = CSRBvfsAPI.init(
 	vfsCommandTimeoutRetries = int((500 * 1000) / 3301),
 	storagePath = b"/tmp/CSRBSTORAGE")
 
-time.sleep(2)
+print("CSRBvfsHandle: ", hex(CSRBvfsHandle.value))
+
+time.sleep(1)
 
 ################################################################################
 # LIST THE VIRTUAL FILESYSTEM
@@ -114,7 +116,7 @@ time.sleep(1)
 
 msg = CSRBprotocolMessage()
 msg.header.type = 333
-msg.header.params[0].id.fromHexString("123123123")
+msg.header.params[0].id.fromHexString(nodeid)
 msg.header.params[0].num = 1
 msg.header.dataSize = 16
 msg.header.signature = 789
@@ -123,12 +125,15 @@ msg.data[0] = 0x55
 msg.dataSet(b"DDAATTATATA")
 print(msg)
 
-CSRBvfsAPI.CSRBmessageSend(CSRBvfsHandle,
-	"/MESSAGE/00000000000000000000000000000000/0000000000000010",
-	fdMSG2,
-	msg)
+for i in range(128):
+	msg.header.params[0].num = i
+	CSRBvfsAPI.CSRBmessageSend(CSRBvfsHandle,
+		"/MESSAGE/00000000000000000000000000000000/0000000000000010",
+		fdMSG2,
+		msg)
+	time.sleep(1)
 
 ################################################################################
 
 print("END")
-time.sleep(60);
+time.sleep(7 * 24 * 3600)
