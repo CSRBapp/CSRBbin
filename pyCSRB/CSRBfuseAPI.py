@@ -53,7 +53,7 @@ def CSRBmessageReceive(handle):
 		if buf and len(buf) == m.messageSize():
 			m.fromBuf(buf)
 			#print("# MESSAGE DATA SIZE: " + str(m.header.dataSize))
-			#print("# MESSAGE DATA: " + str(m.data.decode("utf-8", errors='replace')))
+			#print("# MESSAGE DATA: " + str(m.data.decode("utf-8", errors="replace")))
 			return len(buf),m
 		elif buf:
 			print("*** INVALID MESSAGE RECEIVED")

@@ -9,6 +9,9 @@ def libraryLoad():
 
 	CSRBvfsLibrary = ctypes.CDLL("libCSRBvfs.so")
 
+	# need this as ctypes sometimes gets confused and converts to int32
+	CSRBvfsLibrary.CSRBvfsInit.restype = ctypes.c_void_p
+
 	ret = CSRBvfsLibrary.CSRBvfsImportTest()
 	print("Import Test: %d" % ret)
 
@@ -21,9 +24,9 @@ def init(nodeid,
 	storagePath):
 	global CSRBvfsLibrary
 
-	CSRBvfsHandle = ctypes.c_void_p(None)
+	CSRBvfsHandle = ctypes.c_void_p()
 
-	CSRBvfsHandle = CSRBvfsLibrary.CSRBvfsInit(
+	CSRBvfsHandle.value = CSRBvfsLibrary.CSRBvfsInit(
 		ctypes.c_char_p(nodeid),
 		ctypes.c_char_p(bindHost),
 		bindPort,
@@ -37,7 +40,7 @@ def init(nodeid,
 		vfsCommandTimeoutRetries,
 		ctypes.c_char_p(storagePath))
 
-	print("CSRBvfsHandle: %x" % CSRBvfsHandle)
+	#print("init: CSRBvfsHandle: %x" % CSRBvfsHandle.value)
 
 	return CSRBvfsHandle;
 
@@ -121,7 +124,7 @@ def CSRBmessageReceive(CSRBvfsHandle, path, fd):
 		if ret == m.messageSize():
 			m.fromBuf(buf)
 			#print("# MESSAGE DATA SIZE: " + str(m.header.dataSize))
-			#print("# MESSAGE DATA: " + str(m.data.decode("utf-8", errors='replace')))
+			#print("# MESSAGE DATA: " + str(m.data.decode("utf-8", errors="replace")))
 			return m
 		else:
 			print("*** INVALID MESSAGE RECEIVED")
@@ -138,7 +141,7 @@ def CSRBmessageSend(CSRBvfsHandle, path, fd, msg):
 		msg.toBuf(),
 		msg.messageSize(),
 		0)
-	print("sent %u/%u" % (ret, msg.messageSize()))
+	#print("sent %u/%u" % (ret, msg.messageSize()))
 	#print("sent [" + str(msg) + "]")
 	#print("sent [" + str(m.toBuf()) + "]")
 	return ret
