@@ -13,7 +13,10 @@ def libraryLoad():
 	CSRBvfsLibrary.CSRBvfsInit.restype = ctypes.c_void_p
 
 	ret = CSRBvfsLibrary.CSRBvfsImportTest()
-	print("Import Test: %d" % ret)
+	if ret != 555:
+		print("*** CSRBvfsLibrary IMPORT ERROR ***")
+		return -1
+	return 1
 
 def init(nodeid,
 	bindHost, bindPort,
