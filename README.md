@@ -32,9 +32,20 @@ $ LD_LIBRARY_PATH=SYS/ PATH=SYS/:${PATH} ./decrypt.sh
 > <ENTER DECRYPTION PASSWORD>
 ```
 
+## pyCSRB Configuration ENV Variables
+* ROUTERPORT
+* STORAGEPATH
+
 ## Run pyCSRB Demo
 ```sh
 $ mkdir /tmp/CSRBSTORAGE
 $ cd pyCSRB
 $ LD_LIBRARY_PATH=../NetBSD-9.1/SYS:../NetBSD-9.1/ python3 CSRBvfsDemo.py
+```
+
+## Run pyCSRB Node
+```sh
+$ mkdir /tmp/CSRBSTORAGE
+$ cd pyCSRB
+$ LD_LIBRARY_PATH=../NetBSD-9.1/SYS:../NetBSD-9.1/ python3 CSRBvfsNode.py
 ```
