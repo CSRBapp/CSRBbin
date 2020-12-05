@@ -33,7 +33,7 @@ $ LD_LIBRARY_PATH=SYS/ PATH=SYS/:${PATH} ./decrypt.sh
 ```
 
 ## pyCSRB Configuration ENV Variables
-* ROUTERPORT
+* ROUTERHOST
 * STORAGEPATH
 
 ## Run pyCSRB Demo
