@@ -4,33 +4,9 @@ import time
 import threading
 
 import CSRBvfsAPI
-from CSRBprotocolMessage import *
 
-import socket
-import hashlib
-fqdn = socket.getfqdn()
-print("FQDN: %s" % fqdn)
-fqdnhash = hashlib.md5()
-fqdnhash.update(fqdn.encode("utf-8"))
-nodeid = fqdnhash.hexdigest().upper().encode("utf-8")
-print("NODEID: %s" % nodeid)
-
-CSRBvfsAPI.libraryLoad()
-CSRBvfsHandle = CSRBvfsAPI.init(
-	nodeid = nodeid,
-	bindHost = b"0.0.0.0",
-	bindPort = 0,
-	routerHost = b"public.csrb.app",
-	routerPort = 32450,
-	routerInterspaceUSEC = 0,
-	nodeCAcertificateFile = b"../CERTS/CA.nodes.csrb.crt",
-	nodeCertificateFile = b"../CERTS/C9BAD58F23D5A6C095C0571512CD318D.nodes.csrb.pem",
-	vfsSectorSize = 32768,
-	vfsCommandTimeoutMS = 3301,
-	vfsCommandTimeoutRetries = int((500 * 1000) / 3301),
-	storagePath = b"/tmp/CSRBSTORAGE")
-
-print("CSRBvfsHandle: ", hex(CSRBvfsHandle.value))
+# import and run the CSRBvfsNode code to start the CSRB VFS Node
+from CSRBvfsNode import *
 
 time.sleep(1)
 
@@ -105,7 +81,7 @@ def threadMSGrx():
 		m = CSRBvfsAPI.CSRBmessageReceive(CSRBvfsHandle,
 			"/MESSAGE/00000000000000000000000000000000/0000000000000010",
 			fdMSG1)
-		print(m)
+		print("\nRECEIVED MESSAGE:\n", m)
 	print("threadMSGrx END")
 
 threading.Thread(target=threadMSGrx).start()
@@ -125,7 +101,9 @@ msg.data[0] = 0x55
 msg.dataSet(b"DDAATTATATA")
 print(msg)
 
+print()
 for i in range(128):
+	#print(" Sending %d\t" % i, end="\r")
 	msg.header.params[0].num = i
 	CSRBvfsAPI.CSRBmessageSend(CSRBvfsHandle,
 		"/MESSAGE/00000000000000000000000000000000/0000000000000010",
