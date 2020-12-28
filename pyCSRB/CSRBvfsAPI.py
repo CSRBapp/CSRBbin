@@ -68,14 +68,15 @@ def ls(CSRBvfsHandle, path, entries):
 			#print(_entries[i])
 			entries.append(_entries[i])
 
-def open(CSRBvfsHandle, file):
+def open(CSRBvfsHandle, file, truncate=False):
 	global CSRBvfsLibrary
 
 	_handle = ctypes.c_int64()
 
 	CSRBvfsLibrary.CSRBvfsOpen(CSRBvfsHandle,
 		ctypes.c_char_p(file.encode("utf-8")),
-		ctypes.byref(_handle))
+		ctypes.byref(_handle),
+		ctypes.c_bool(truncate))
 
 	return _handle.value
 
