@@ -21,7 +21,7 @@ $ LD_LIBRARY_PATH=../DEBIAN-TESTING python3 CSRBvfsDemo.py
 
 ## Fetch
 ``` sh
-git clone https://github.com/CSRBapp/CSRBbin.git
+git clone --depth 1 https://github.com/CSRBapp/CSRBbin.git
 wget https://github.com/CSRBapp/CSRBbin/archive/master.zip
 ```
 
