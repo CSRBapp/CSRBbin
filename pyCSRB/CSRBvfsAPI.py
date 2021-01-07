@@ -111,6 +111,17 @@ def write(CSRBvfsHandle, path, fd, buf, bufSize, writeOffset):
 
 	return ret
 
+def truncate(CSRBvfsHandle, file, fd):
+	global CSRBvfsLibrary
+
+	_handle = ctypes.c_int64()
+
+	ret = CSRBvfsLibrary.CSRBvfsTruncate(CSRBvfsHandle,
+		ctypes.c_int64(fd),
+		ctypes.c_char_p(file.encode("utf-8")))
+
+	return ret
+
 def CSRBmessageReceive(CSRBvfsHandle, path, fd):
 	m = CSRBprotocolMessage()
 	while True:
