@@ -1,13 +1,13 @@
 BIND_IP=${BIND_IP:-0.0.0.0}
 BIND_PORT=${BIND_PORT:-0}
-ROUTER_IP=${ROUTER_IP:-public.csrb.app}
+ROUTER_HOST=${ROUTER_HOST:-public.csrb.app}
 ROUTER_PORT=${ROUTER_PORT:-32450}
-ROUTER_INTERSPACE_USEC=${ROUTER_INTERSPACE_USEC:-0}
+ROUTER_INTERSPACE_USEC=${ROUTER_INTERSPACE_USEC:-10000}
 
 OS=`uname`
-if      [[ "$OS" == "Linux" ]];		then	MD5SUM=md5sum
-elif    [[ "$OS" == "OpenBSD" ]];	then	MD5SUM=md5
-elif    [[ "$OS" == "FreeBSD" ]];	then	MD5SUM=md5
+if	[[ "$OS" == "Linux" ]];		then	MD5SUM=md5sum
+elif	[[ "$OS" == "OpenBSD" ]];	then	MD5SUM=md5
+elif	[[ "$OS" == "FreeBSD" ]];	then	MD5SUM=md5
 fi
 
 NODEID_HOSTNAME=${HOSTNAME:-`hostname -s`}
