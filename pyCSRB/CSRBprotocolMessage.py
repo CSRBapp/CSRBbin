@@ -2,30 +2,54 @@
 
 import ctypes
 import math
+import bitstruct
+
+class MessageID(ctypes.Structure):
+	_pack_ = 1
+	_fields_ = [("id", ctypes.c_ulonglong)]
+
+	def __str__(self):
+		return format(self.id, "016X")
+
+	def fromHexString(self, hexString):
+		hexString = hexString.zfill(16)
+		self.id = int(hexString, 16)
+
+	def toHexString(self):
+		return self.__str__()
+
+	def fromBytes(self, b):
+		self.id = int.from_bytes(b, byteorder="little", signed=False)
 
 class ObjectID(ctypes.Structure):
 	_pack_ = 1
 	_fields_ = [("id", ctypes.c_ulonglong * 2)]
 
 	def __str__(self):
-		return ''.join(format(x, '016X') for x in reversed(self.id))
+		return ''.join(format(x, "016X") for x in reversed(self.id))
 
 	def fromHexString(self, hexString):
 		hexString = hexString.zfill(32)
 		self.id[1] = int(hexString[0:16], 16)
 		self.id[0] = int(hexString[16:32], 16)
+
+	def toHexString(self):
+		return self.__str__()
 
 class SASnetID(ctypes.Structure):
 	_pack_ = 1
 	_fields_ = [("id", ctypes.c_ulonglong * 2)]
 
 	def __str__(self):
-		return ''.join(format(x, '016X') for x in reversed(self.id))
+		return ''.join(format(x, "016X") for x in reversed(self.id))
 
 	def fromHexString(self, hexString):
 		hexString = hexString.zfill(32)
 		self.id[1] = int(hexString[0:16], 16)
 		self.id[0] = int(hexString[16:32], 16)
+
+	def toHexString(self):
+		return self.__str__()
 
 class CSRBprotocolMessageHeaderParamType(ctypes.Structure):
 	_pack_ = 1
@@ -90,11 +114,12 @@ class CSRBprotocolCMDmoduleExecute(ctypes.Structure):
 	_pack_ = 1
 	_fields_ = [\
 		("reference", ctypes.c_ulonglong),
-		("module", ObjectID),
-		("function", ctypes.c_char * 32),
-		("parameters", ctypes.c_ulonglong * 8),
-		("objects", ObjectID * 8),
-		("references", ctypes.c_ulonglong * 8)]
+		("moduleNodeID", SASnetID),
+		("moduleObjectID", ObjectID),
+		("moduleFunction", ctypes.c_char * 32),
+		("functionParameters", ctypes.c_ulonglong * 8),
+		("functionObject", ObjectID * 8),
+		("functionReferences", ctypes.c_ulonglong * 8)]
 
 	def toBuf(self):
 		size = ctypes.sizeof(self)
@@ -102,3 +127,21 @@ class CSRBprotocolCMDmoduleExecute(ctypes.Structure):
 		ctypes.memmove(b, ctypes.addressof(self), size)
 		return b.raw
 
+	def ioctlCommandGenerate():
+		#ioctlCmd = bitstruct.byteswap("8", bitstruct.pack(">u2u14u8u8", 3, ctypes.sizeof(CSRBprotocolCMDmoduleExecute), 1, 1))
+		ioctlCmd = bitstruct.pack(
+			">u3u13u8u8",
+			6,
+			ctypes.sizeof(CSRBprotocolCMDmoduleExecute),
+			1,
+			1
+		)
+
+		#print("ioctlCmd initial assembly: " + ioctlCmd.hex())
+		ioctlCmd = bitstruct.byteswap("8", ioctlCmd)
+		#print("ioctlCmd byte swapped: " + ioctlCmd.hex())
+
+		ioctlCmdInt = int.from_bytes(ioctlCmd, byteorder='little')
+		#print("ioctlCmdInt LE int: " + str(hex(ioctlCmdInt)))
+
+		return ioctlCmdInt

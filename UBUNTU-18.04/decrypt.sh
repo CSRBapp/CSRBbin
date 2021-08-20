@@ -1,0 +1,1 @@
+../SCRIPTS/bins-decrypt.sh
