@@ -2,7 +2,7 @@
 
 source $(dirname $0)/common.sh
 
-BIN=${BIN:-${VALGRIND} ${BUILD_DIR}/CSRBnode}
+BIN=${BINDIR}/CSRBnode
 
 while true
 do
