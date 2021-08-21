@@ -9,6 +9,7 @@ OS=`uname`
 if	[[ "$OS" == "Linux" ]];		then	MD5SUM=md5sum
 elif	[[ "$OS" == "OpenBSD" ]];	then	MD5SUM=md5
 elif	[[ "$OS" == "FreeBSD" ]];	then	MD5SUM=md5
+elif	[[ "$OS" == "NetBSD" ]];	then	MD5SUM=md5
 fi
 
 NODEID_HOSTNAME=${HOSTNAME:-`hostname -s`}
@@ -23,3 +24,14 @@ NODE_CERT=${NODE_CERT:-${__SCRIPTS_DIR}/../CERTS/C9BAD58F23D5A6C095C0571512CD318
 ACCESS_CERT=${ACCESS_CERT:-${NODE_CERT}}
 STORAGE_PATH=${STORAGE_PATH:-~/CSRBSTORAGE/${NODEID}/}
 
+if [ ! -v BINDIR ]
+then
+	echo "\$BINDIR is not set"
+	exit -1
+fi
+
+if [ ! -d "$STORAGE_PATH" ]
+then
+	echo "STORAGE_PATH [$STORAGE_PATH] does not exist"
+	exit -1
+fi
