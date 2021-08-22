@@ -12,5 +12,5 @@ do
 		${CA_CERT} ${NODE_CERT} \
 		${STORAGE_PATH}
 
-	sleep 5s
+	sleep 5
 done
