@@ -1,58 +1,134 @@
-# GITPOD QUICKSTART
+# Contents <!-- omit in toc -->
 
-## Launch
-https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
+- [Repository Cloning](#repository-cloning)
+- [Start a CSRB Node application](#start-a-csrb-node-application)
+	- [Starting CSRBvfsFUSE](#starting-csrbvfsfuse)
+	- [Starting CSRBnode](#starting-csrbnode)
+- [Example User Application](#example-user-application)
+	- [ZFS Pool over CSRB](#zfs-pool-over-csrb)
+		- [Create a *zpool*](#create-a-zpool)
+			- [RAID0 / STRIPED](#raid0--striped)
+			- [RAIDZ1 / RAID5](#raidz1--raid5)
+		- [Import an existing *zpool*](#import-an-existing-zpool)
+	- [pyCSRB](#pycsrb)
+		- [Setup](#setup)
+		- [Run pyCSRB Demo](#run-pycsrb-demo)
+- [Gitpod Quickstart](#gitpod-quickstart)
+	- [Launch Workspace](#launch-workspace)
+	- [Configure Workspace](#configure-workspace)
+	- [Start CSRBvfsFUSE](#start-csrbvfsfuse)
+	- [Run the ZFS Pool example](#run-the-zfs-pool-example)
+		- [Install ZFS-FUSE](#install-zfs-fuse)
+		- [ZFS-FUSE limitations](#zfs-fuse-limitations)
+		- [ZFS-FUSE forced shutdown](#zfs-fuse-forced-shutdown)
+- [NetBSD Quickstart](#netbsd-quickstart)
+	- [Setup](#setup-1)
+	- [Run pyCSRB Demo](#run-pycsrb-demo-1)
+	- [Run pyCSRB Node](#run-pycsrb-node)
+- [NOTES](#notes)
 
-## System configuration
-```sh
-sudo apt update
-sudo apt -y install fuse3
+# Repository Cloning
+It is recommended that you clone a shallow repo, as the full history contains multiple binary files.
+
+``` sh
+git clone --depth 1 https://github.com/CSRBapp/CSRBbin
+# or
+wget https://github.com/CSRBapp/CSRBbin/archive/master.zip
 ```
+
+# Start a CSRB Node application
+You can run one of provided applications. With the default settings and certificates provided, they will connect to a public CSRB Network Router and provide access to the rest of the CSRB Network.
+
+> **NOTE**\
+You can run multiple CSRB applications at the same time, one or more instances of each, as long as you provide a unique NODEID, STORAGE_PATH, and VFS_MOUNTPOINT for each.
+
+One of following *OSDIR* options has to be chosen to indicate which binaries are used by the scripts:
+* DEBIAN-TESTING
+* UBUNTU-20.04
+* NetBSD
 
 ## Starting CSRBvfsFUSE
 ```sh
-BINDIR=UBUNTU-18.04/ SCRIPTS/start-CSRBvfsFUSE.sh
+BINDIR=[OSDIR] SCRIPTS/start-CSRBvfsFUSE.sh
 ```
+*CSRBvfsFUSE* acts as a CSRB Node and also exposes a FUSE based VFS for external applications to easily access the OBJECT, MESSAGES, etc, services of the CSRB Network.
 
 ## Starting CSRBnode
 ```sh
-BINDIR=UBUNTU-18.04/ SCRIPTS/start-CSRBnode.sh
+BINDIR=[OSDIR] SCRIPTS/start-CSRBnode.sh
 ```
+*CSRBnode* acts as a passive CSRB Node without any local interactions.
 
-## ZFS Test
 
-### System configuration
-```sh
-sudo apt -y install zfs-fuse
-sed -i 's/^#user/user/' /etc/fuse.conf
-```
-
-### Pool Creation
+# Example User Application
+## ZFS Pool over CSRB
+### Create a *zpool*
+* CSRBvfsFUSE should be [running](#starting-csrbvfsfuse) before creating the ZFS Pool.
+* The CSRB OBJECTBLOCK size is 32KB so *ashift* should be set to 15 (2^15).
+* Need to set the ZFS directory permissions if you want to write to it as a user:\
+	`sudo chmod go+w /zCSRB`
 
 #### RAID0 / STRIPED
-
-CSRBvfsFUSE should be running
-
 ```sh
 sudo zpool create -o ashift=15 -O recordsize=32k \
-        -O xattr=off \
-        -O atime=off \
-        -O compression=off \
-        -O primarycache=metadata \
-        -f zCSRB \
-        /tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/0000000000000000000000000000000100001000 \
-        /tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/1000000000000000000000000000000100001000 \
-        /tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/2000000000000000000000000000000100001000 \
-        /tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/3000000000000000000000000000000100001000
+	-o feature@large_dnode=enabled \
+	-O dnodesize=auto \
+	-O xattr=sa \
+	-O atime=off \
+	-O compression=off \
+	-O primarycache=metadata \
+	-f zCSRB \
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/0000000000000000000000000000000100008000 \
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/1000000000000000000000000000000100008000 \
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/2000000000000000000000000000000100008000 \
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/3000000000000000000000000000000100008000
+```
+or with *bash* you can use:
+```sh
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/[0-3]000000000000000000000000000000100008000
+```
+
+#### RAIDZ1 / RAID5
+```sh
+sudo zpool create -o ashift=15 -O recordsize=128k \
+	-o feature@large_dnode=enabled \
+	-O dnodesize=auto \
+	-O xattr=sa \
+	-O atime=off \
+	-O compression=off \
+	-O primarycache=metadata \
+	-f zCSRB raidz1 \
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/0000000000000000000000000000000100008000 \
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/1000000000000000000000000000000100008000 \
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/2000000000000000000000000000000100008000 \
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/3000000000000000000000000000000100008000 \
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/4000000000000000000000000000000100008000
+```
+or with *bash* you can use:
+```sh
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/[0-4]000000000000000000000000000000100008000
+```
+
+### Import an existing *zpool*
+```sh
+sudo zpool import \
+	-d /tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/0000000000000000000000000000000100008000 \
+	-d /tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/1000000000000000000000000000000100008000 \
+	-d /tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/2000000000000000000000000000000100008000 \
+	-d /tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/3000000000000000000000000000000100008000 \
+	-d /tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/4000000000000000000000000000000100008000
+```
+or with *bash* you can use:
+```sh
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/[0-4]000000000000000000000000000000100008000
 ```
 
 ## pyCSRB
-
 ### Setup
 ```sh
 $ cd DEBIAN-TESTING
 $ ./decrypt.sh
-> <ENTER DECRYPTION PASSWORD>
+<ENTER DECRYPTION PASSWORD>
 ```
 
 ### Run pyCSRB Demo
@@ -61,22 +137,64 @@ $ cd pyCSRB
 $ LD_LIBRARY_PATH=../DEBIAN-TESTING python3 CSRBvfsDemo.py
 ```
 
-# NetBSD QUICKSTART
 
-## Fetch
-``` sh
-git clone --depth 1 https://github.com/CSRBapp/CSRBbin.git
-wget https://github.com/CSRBapp/CSRBbin/archive/master.zip
+# Gitpod Quickstart
+
+## Launch Workspace
+Open this link: https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
+
+> **NOTE**\
+If you *Stop* the Workspace or if it *times out* then all running applications will be stopped and the system configuration will be reset. When you restart the Workspace you need to reconfigure/reinstall/start everything from scratch. A [script](SCRIPTS/gitpod-configure.sh) is include to reconfigure/reinstall everything.
+
+## Configure Workspace
+```sh
+sudo apt update
+sudo apt -y install fuse3
+sudo sed -i "s/^#user_allow_other/user_allow_other/" /etc/fuse.conf
 ```
 
-### Setup
+## Start CSRBvfsFUSE
+```sh
+BINDIR=UBUNTU-18.04/ SCRIPTS/start-CSRBvfsFUSE.sh
+```
+
+## Run the [ZFS Pool](#zfs-pool-over-csrb) example
+It is not possible to use the proper OpenZFS implementaion within a Gitpod Workspace, due to the need for a kernel module and for elevated Docker privileges.
+
+It is possible though to use the old and deprecated ZFS-FUSE implementation that is still available in the package system.
+
+### Install ZFS-FUSE
+```sh
+sudo apt -y install zfs-fuse
+sudo service zfs-fuse --full-restart
+```
+
+### ZFS-FUSE limitations
+Due to the ZFS-FUSE being a much older ZFS implementation, the following configurations changed need to done:
+
+* **ashift=14**: ZFS-FUSE does not seem to support a 32KB sector alignment to match the CSRB OBJECT size of 32KB. Setting *ashift* to 15 is accepted during pool creation but the internal data end up being corrupted and the pool becoming unusable.
+* ~~**feature@large_dnode=enabled**~~: Not Supported
+* ~~**dnodesize=auto**~~: Not Supported
+
+### ZFS-FUSE forced shutdown
+If things get stuck and you can't cleanly export a *zpool*, you can kill and restart ZFS-FUSE:
+```sh
+sudo kill -9 `pidof zfs-fuse`
+sudo rm -f /var/run/zfs-fuse.pid
+sudo systemctl restart zfs-fuse
+```
+
+
+# NetBSD Quickstart
+
+## Setup
 ```sh
 $ cd NetBSD-9.1
 $ LD_LIBRARY_PATH=SYS/ PATH=SYS/:${PATH} ./decrypt.sh
-> <ENTER DECRYPTION PASSWORD>
+<ENTER DECRYPTION PASSWORD>
 ```
 
-### Run pyCSRB Demo
+## Run pyCSRB Demo
 ```sh
 $ cd pyCSRB
 $ LD_LIBRARY_PATH=../NetBSD-9.1/SYS:../NetBSD-9.1/ python3 CSRBvfsDemo.py
@@ -87,4 +205,25 @@ $ LD_LIBRARY_PATH=../NetBSD-9.1/SYS:../NetBSD-9.1/ python3 CSRBvfsDemo.py
 $ mkdir /tmp/CSRBSTORAGE
 $ cd pyCSRB
 $ LD_LIBRARY_PATH=../NetBSD-9.1/SYS:../NetBSD-9.1/ python3 CSRBvfsNode.py
+```
+
+# NOTES
+
+Useful strings for copy-pasting:
+
+```
+00000000000000000000000000000000
+0000000000000000000000000000000000000000
+```
+
+Helper commands:
+
+```
+sudo apt install tmux
+
+sudo watch -n 1 zpool status zCSRB
+sudo zpool iostat zCSRB -v 1
+sudo zpool scrub zCSRB
+
+dd if=/dev/urandom of=/zCSRB/fill bs=1M count=1k
 ```
