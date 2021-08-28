@@ -16,11 +16,15 @@
 - [Gitpod Quickstart](#gitpod-quickstart)
 	- [Launch Workspace](#launch-workspace)
 	- [Configure Workspace](#configure-workspace)
+	- [Create the default STORAGE_PATH and VFS_MOUNTPOINT paths](#create-the-default-storage_path-and-vfs_mountpoint-paths)
 	- [Start CSRBvfsFUSE](#start-csrbvfsfuse)
 	- [Run the ZFS Pool example](#run-the-zfs-pool-example)
 		- [Install ZFS-FUSE](#install-zfs-fuse)
 		- [ZFS-FUSE limitations](#zfs-fuse-limitations)
 		- [ZFS-FUSE forced shutdown](#zfs-fuse-forced-shutdown)
+		- [Create RAID0](#create-raid0)
+		- [Create RAIDZ1](#create-raidz1)
+		- [Set *zCSRB* permissions](#set-zcsrb-permissions)
 - [NetBSD Quickstart](#netbsd-quickstart)
 	- [Setup](#setup-1)
 	- [Run pyCSRB Demo](#run-pycsrb-demo-1)
@@ -42,8 +46,12 @@ You can run one of provided applications. With the default settings and certific
 > **NOTE**\
 You can run multiple CSRB applications at the same time, one or more instances of each, as long as you provide a unique NODEID, STORAGE_PATH, and VFS_MOUNTPOINT for each.
 
+> **NOTE**\
+The STORAGE_PATH and VFS_MOUNTPOINT directories need to exist for the provided scripts to run. An error will be shown if any of the directories is found, so that you can create it.
+
 One of following *OSDIR* options has to be chosen to indicate which binaries are used by the scripts:
 * DEBIAN-TESTING
+* UBUNTU-18.04
 * UBUNTU-20.04
 * NetBSD
 
@@ -85,7 +93,7 @@ sudo zpool create -o ashift=15 -O recordsize=32k \
 ```
 or with *bash* you can use:
 ```sh
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/[0-3]000000000000000000000000000000100008000
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/{0..3}000000000000000000000000000000100008000
 ```
 
 #### RAIDZ1 / RAID5
@@ -106,7 +114,7 @@ sudo zpool create -o ashift=15 -O recordsize=128k \
 ```
 or with *bash* you can use:
 ```sh
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/[0-4]000000000000000000000000000000100008000
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/{0..4}000000000000000000000000000000100008000
 ```
 
 ### Import an existing *zpool*
@@ -120,7 +128,7 @@ sudo zpool import \
 ```
 or with *bash* you can use:
 ```sh
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/[0-4]000000000000000000000000000000100008000
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/{0..4}000000000000000000000000000000100008000
 ```
 
 ## pyCSRB
@@ -152,10 +160,15 @@ sudo apt update
 sudo apt -y install fuse3
 sudo sed -i "s/^#user_allow_other/user_allow_other/" /etc/fuse.conf
 ```
+## Create the default STORAGE_PATH and VFS_MOUNTPOINT paths
+```sh
+mkdir -p ~/CSRBSTORAGE/`SCRIPTS/host-NODEID.sh`
+mkdir /tmp/CSRBVFS
+```
 
 ## Start CSRBvfsFUSE
 ```sh
-BINDIR=UBUNTU-18.04/ SCRIPTS/start-CSRBvfsFUSE.sh
+BINDIR=UBUNTU-20.04/ SCRIPTS/start-CSRBvfsFUSE.sh
 ```
 
 ## Run the [ZFS Pool](#zfs-pool-over-csrb) example
@@ -184,6 +197,32 @@ sudo rm -f /var/run/zfs-fuse.pid
 sudo systemctl restart zfs-fuse
 ```
 
+### Create RAID0
+```sh
+sudo zpool create -o ashift=14 -O recordsize=32k \
+	-O xattr=off \
+	-O atime=off \
+	-O compression=off \
+	-O primarycache=metadata \
+	-f zCSRB \
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/{0..3}000000000000000000000000000000100008000
+```
+
+### Create RAIDZ1
+```sh
+sudo zpool create -o ashift=14 -O recordsize=64k \
+	-O xattr=off \
+	-O atime=off \
+	-O compression=off \
+	-O primarycache=metadata \
+	-f zCSRB raidz1 \
+	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/{0..4}000000000000000000000000000000100008000
+```
+
+### Set *zCSRB* permissions
+```sh
+sudo chmod 777 /zCSRB
+```
 
 # NetBSD Quickstart
 
