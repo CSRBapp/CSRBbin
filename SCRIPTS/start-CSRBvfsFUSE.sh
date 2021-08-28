@@ -6,7 +6,7 @@ COMMAND_TIMEOUT=${COMMAND_TIMEOUT:+,commandTimeoutMS=${COMMAND_TIMEOUT}}
 NODEID=${NODEID:+,nodeID=${NODEID}}
 STORAGE_PATH=${STORAGE_PATH:+,storagePath=${STORAGE_PATH}}
 VFS_MOUNTPOINT=${VFS_MOUNTPOINT:-/tmp/CSRBVFS}
-VFS_WORKERS_COUNT=${VFS_WORKERS_COUNT:-0} # 0: internal defaults
+VFS_WORKERS_COUNT=${VFS_WORKERS_COUNT:+,vfsWorkersCount=${VFS_WORKERS_COUNT}}
 
 if [ ! -d "$VFS_MOUNTPOINT" ]
 then
@@ -32,7 +32,6 @@ networkPacingRateKBps=${NETWORKPACINGRATEKBPS},\
 routerHost=${ROUTER_HOST},\
 routerPort=${ROUTER_PORT},\
 routerInterspaceUSEC=${ROUTER_INTERSPACE_USEC},\
-vfsWorkersCount=${VFS_WORKERS_COUNT},\
 nodeCAcertificateFile=${CA_CERT},\
 nodeCertificateFile=${NODE_CERT},\
 accessCertificateFile=${ACCESS_CERT},\
@@ -40,4 +39,6 @@ enableMicropython\
 ${NODEID}\
 ${STORAGE_PATH}\
 ${COMMAND_TIMEOUT}\
+${VFS_WORKERS_COUNT}\
  -f ${VFS_MOUNTPOINT}
+
