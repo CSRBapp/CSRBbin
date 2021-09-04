@@ -7,7 +7,7 @@ on:
 env:
   REGISTRY: ghcr.io
   #IMAGE_NAME: ${{ github.repository }}
-  IMAGE_NAME: csrbnode
+  IMAGE_NAME: CSRBapp/CSRBnode
 
 jobs:
   build-and-push-image:
