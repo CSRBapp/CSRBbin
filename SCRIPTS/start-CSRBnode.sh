@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 source $(dirname $0)/env.sh
-
-$(dirname $0)/checks.sh
+source $(dirname $0)/checks.sh
 
 BIN=${BINDIR}/CSRBnode
 
