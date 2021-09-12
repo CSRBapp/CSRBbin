@@ -2,7 +2,7 @@
 
 if [ ! -v BINDIR ]
 then
-	echo "\$BINDIR is not set"
+	echo "BINDIR is not set"
 	exit -1
 fi
 
