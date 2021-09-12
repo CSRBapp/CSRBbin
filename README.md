@@ -40,6 +40,10 @@ git clone --depth 1 https://github.com/CSRBapp/CSRBbin
 wget https://github.com/CSRBapp/CSRBbin/archive/master.zip
 ```
 
+# Dockerisation
+## CSRBnode Image
+`ghcr.io/csrbapp/csrbnode:master`
+
 # Start a CSRB Node application
 You can run one of provided applications. With the default settings and certificates provided, they will connect to a public CSRB Network Router and provide access to the rest of the CSRB Network.
 
