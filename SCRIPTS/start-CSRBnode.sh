@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
-source $(dirname $0)/env.sh
 . $(dirname $0)/checks.sh
+source $(dirname $0)/env.sh
+
+if [[ "$OS" == "NetBSD" ]]
+then
+	export LD_LIBRARY_PATH=${__SCRIPTS_DIR}/../NetBSD-${OS_RELEASE}/SYS/
+fi
 
 BIN=${BINDIR}/CSRBnode
 
