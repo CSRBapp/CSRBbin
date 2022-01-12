@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
-. $(dirname $0)/checks.sh
+source $(dirname $0)/os-detect.sh
 source $(dirname $0)/env.sh
-
-if [[ "$OS" == "NetBSD" ]]
-then
-	export LD_LIBRARY_PATH=${__SCRIPTS_DIR}/../NetBSD-${OS_RELEASE}/SYS/
-fi
+. $(dirname $0)/checks.sh
 
 COMMAND_TIMEOUT=${COMMAND_TIMEOUT:+,commandTimeoutMS=${COMMAND_TIMEOUT}}
 NODEID=${NODEID:+,nodeID=${NODEID}}
