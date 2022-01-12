@@ -43,6 +43,10 @@ then
 	exit -1
 fi
 
+export OS
+export OS_RELEASE
+export DISTRO
+export DISTRO_RELEASE
 export BINDIR
 
 if [ ! -d "${STORAGE_PATH}" ]
