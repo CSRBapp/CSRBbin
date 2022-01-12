@@ -6,11 +6,12 @@ ROUTER_INTERSPACE_USEC=${ROUTER_INTERSPACE_USEC:-10000}
 NETWORKPACINGRATEKBPS=${NETWORKPACINGRATEKBPS:-122880}
 
 OS=`uname -s`
-if	[[ "$OS" == "Linux" ]];		then	MD5SUM=md5sum
-elif	[[ "$OS" == "OpenBSD" ]];	then	MD5SUM=md5
-elif	[[ "$OS" == "FreeBSD" ]];	then	MD5SUM=md5
-elif	[[ "$OS" == "NetBSD" ]];	then	MD5SUM=md5
-fi
+case "${OS}" in
+	Linux)		MD5SUM=md5sum ;;
+	OpenBSD)	MD5SUM=md5 ;;
+	FreeBSD)	MD5SUM=md5 ;;
+	NetBSD)		MD5SUM=md5 ;;
+esac
 
 NODEID_HOSTNAME=${HOSTNAME:-`hostname -s`}
 NODEID_OF_HOSTNAME=`echo -n ${NODEID_HOSTNAME} | tr -d '\n' | ${MD5SUM} | cut -d ' ' -f 1 | tr '[:lower:]' '[:upper:]'`
