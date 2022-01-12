@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 source $(dirname $0)/env.sh
-source $(dirname $0)/checks.sh
+. $(dirname $0)/checks.sh
 
 COMMAND_TIMEOUT=${COMMAND_TIMEOUT:+,commandTimeoutMS=${COMMAND_TIMEOUT}}
 NODEID=${NODEID:+,nodeID=${NODEID}}

@@ -43,6 +43,8 @@ then
 	exit -1
 fi
 
+export BINDIR
+
 if [ ! -d "${STORAGE_PATH}" ]
 then
 	echo "STORAGE_PATH [$STORAGE_PATH] does not exist"
