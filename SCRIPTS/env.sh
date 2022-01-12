@@ -5,7 +5,7 @@ ROUTER_PORT=${ROUTER_PORT:-32450}
 ROUTER_INTERSPACE_USEC=${ROUTER_INTERSPACE_USEC:-10000}
 NETWORKPACINGRATEKBPS=${NETWORKPACINGRATEKBPS:-122880}
 
-OS=`uname`
+OS=`uname -s`
 if	[[ "$OS" == "Linux" ]];		then	MD5SUM=md5sum
 elif	[[ "$OS" == "OpenBSD" ]];	then	MD5SUM=md5
 elif	[[ "$OS" == "FreeBSD" ]];	then	MD5SUM=md5
