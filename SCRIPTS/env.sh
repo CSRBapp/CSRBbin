@@ -25,7 +25,6 @@ STORAGE_PATH=${STORAGE_PATH:-~/CSRBSTORAGE/${NODEID}/}
 
 if [[ "$OS" == "NetBSD" ]]
 then
-	export LD_LIBRARY_PATH=${__SCRIPTS_DIR}/../NetBSD-9.1/SYS/
-	BINDIR=${__SCRIPTS_DIR}/../NetBSD-9.1/
+	export LD_LIBRARY_PATH=${__SCRIPTS_DIR}/../NetBSD-${OS_RELEASE}/SYS/
 fi
 
