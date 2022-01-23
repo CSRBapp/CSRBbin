@@ -6,9 +6,10 @@ then
 	exit -1
 fi
 
-if [ ! -d "${STORAGE_PATH}" ]
-then
+while [ ! -d "${STORAGE_PATH}" ]
+do
 	echo "STORAGE_PATH [$STORAGE_PATH] does not exist"
-	exit -1
-fi
+	read -s -p "Press ENTER to create it, or CTRL-C to abort..."
+	mkdir -p "$STORAGE_PATH"
+done
 
