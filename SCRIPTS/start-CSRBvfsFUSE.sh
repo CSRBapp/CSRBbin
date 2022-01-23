@@ -15,7 +15,7 @@ do
 	echo "VFS_MOUNTPOINT (${VFS_MOUNTPOINT}) does not exist"
         read -s -p "Press ENTER to create it, or CTRL-C to abort..."
         mkdir -p "${VFS_MOUNTPOINT}"
-done:w
+done
 
 BIN=${BINDIR}/CSRBvfsFUSE
 
