@@ -10,11 +10,12 @@ STORAGE_PATH=${STORAGE_PATH:+,storagePath=${STORAGE_PATH}}
 VFS_MOUNTPOINT=${VFS_MOUNTPOINT:-/tmp/CSRBVFS}
 VFS_WORKERS_COUNT=${VFS_WORKERS_COUNT:+,vfsWorkersCount=${VFS_WORKERS_COUNT}}
 
-if [ ! -d "$VFS_MOUNTPOINT" ]
-then
-	echo "VFS_MOUNTPOINT ($VFS_MOUNTPOINT) does not exist"
-	exit -1
-fi
+while [ ! -d "${VFS_MOUNTPOINT}" ]
+do
+	echo "VFS_MOUNTPOINT (${VFS_MOUNTPOINT}) does not exist"
+        read -s -p "Press ENTER to create it, or CTRL-C to abort..."
+        mkdir -p "${VFS_MOUNTPOINT}"
+done:w
 
 BIN=${BINDIR}/CSRBvfsFUSE
 
@@ -26,7 +27,7 @@ libfuse_max_read=1048576,\
 libfuse_max_write=1048576,\
 libfuse_max_readahead=0,\
 libfuse_max_background=1024,\
-libfuse_direct_io=0,\
+libfuse_direct_io=1,\
 force_open_direct_io=1,\
 bindHost=${BIND_IP},\
 bindPort=${BIND_PORT},\
