@@ -13,7 +13,7 @@ VFS_WORKERS_COUNT=${VFS_WORKERS_COUNT:+,vfsWorkersCount=${VFS_WORKERS_COUNT}}
 while [ ! -d "${VFS_MOUNTPOINT}" ]
 do
 	echo "VFS_MOUNTPOINT (${VFS_MOUNTPOINT}) does not exist"
-        read -s -p "Press ENTER to create it, or CTRL-C to abort..."
+        read -p "Press ENTER to create it, or CTRL-C to abort..."
         mkdir -p "${VFS_MOUNTPOINT}"
 done
 

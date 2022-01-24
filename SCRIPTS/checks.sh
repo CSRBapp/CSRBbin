@@ -9,7 +9,7 @@ fi
 while [ ! -d "${STORAGE_PATH}" ]
 do
 	echo "STORAGE_PATH [$STORAGE_PATH] does not exist"
-	read -s -p "Press ENTER to create it, or CTRL-C to abort..."
+	read -p "Press ENTER to create it, or CTRL-C to abort..."
 	mkdir -p "$STORAGE_PATH"
 done
 
