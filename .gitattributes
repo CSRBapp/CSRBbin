@@ -1,5 +1,5 @@
-*.enc filter=lfs diff=lfs merge=lfs -text
+*.so* filter=lfs diff=lfs merge=lfs -text
 CSRBnode filter=lfs diff=lfs merge=lfs -text
 CSRBvfsFUSE filter=lfs diff=lfs merge=lfs -text
+*.enc filter=lfs diff=lfs merge=lfs -text
 openssl filter=lfs diff=lfs merge=lfs -text
-*.so* filter=lfs diff=lfs merge=lfs -text
