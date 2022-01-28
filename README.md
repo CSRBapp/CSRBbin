@@ -47,10 +47,10 @@ wget https://github.com/CSRBapp/CSRBbin/archive/master.zip
 # Start a CSRB Node application
 You can run one of provided applications. With the default settings and certificates provided, they will connect to a public CSRB Network Router and provide access to the rest of the CSRB Network.
 
-> **NOTE**\
+> **_NOTE_**\
 You can run multiple CSRB applications at the same time, one or more instances of each, as long as you provide a unique NODEID, STORAGE_PATH, and VFS_MOUNTPOINT for each.
 
-> **NOTE**\
+> **_NOTE_**\
 The STORAGE_PATH and VFS_MOUNTPOINT directories need to exist for the provided scripts to run. An error will be shown if any of the directories is found, so that you can create it.
 
 One of following *OSDIR* options has to be chosen to indicate which binaries are used by the scripts:
@@ -152,10 +152,19 @@ $ LD_LIBRARY_PATH=../DEBIAN-TESTING python3 CSRBvfsDemo.py
 
 # Gitpod Quickstart
 
+> **_NOTE_**\
+[2022/01/28]\
+Gitpod seems to have disabled (intentionally? accidentally?) outgoing UDP connections, so for the moment you can't join the CSRB network. 
+
+## TL;DR
+1. https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
+2. `./SCRIPTS/gitpod-configure.sh`
+3. `./SCRIPTS/start-CSRBvfsFUSE.sh`
+
 ## Launch Workspace
 Open this link: https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
 
-> **NOTE**\
+> **_NOTE_**\
 If you *Stop* the Workspace or if it *times out* then all running applications will be stopped and the system configuration will be reset. When you restart the Workspace you need to reconfigure/reinstall/start everything from scratch. A [script](SCRIPTS/gitpod-configure.sh) is include to reconfigure/reinstall everything.
 
 ## Configure Workspace
