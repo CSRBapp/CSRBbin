@@ -25,9 +25,10 @@ noatime,\
 allow_other,\
 libfuse_max_read=1048576,\
 libfuse_max_write=1048576,\
-libfuse_max_readahead=0,\
-libfuse_max_background=1024,\
-libfuse_direct_io=1,\
+libfuse_max_readahead=1048576,\
+libfuse_max_background=64,\
+libfuse_attrs_timeout=5,\
+libfuse_direct_io=0,\
 force_open_direct_io=1,\
 bindHost=${BIND_IP},\
 bindPort=${BIND_PORT},\
