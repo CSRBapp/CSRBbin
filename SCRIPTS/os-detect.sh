@@ -32,6 +32,14 @@ then
 					;;
 			esac
 			;;
+		OpenBSD)
+			OS_RELEASE=`uname -r`
+			case ${OS_RELEASE} in
+				7.9)
+					BINDIR="OpenBSD-7.0"
+					;;
+			esac
+			;;
 	esac
 
 	if [ -v BINDIR ]
