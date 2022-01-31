@@ -28,7 +28,7 @@ then
 			case ${OS_RELEASE} in
 				9.1)
 					BINDIR="NetBSD-9.1"
-					LD_LIBRARY_PATH=${SCRIPTS_DIR}/../NetBSD-${OS_RELEASE}/SYS/
+					LD_LIBRARY_PATH=${SCRIPTS_DIR}/../${BINDIR}/SYS/
 					;;
 			esac
 			;;
@@ -37,6 +37,7 @@ then
 			case ${OS_RELEASE} in
 				7.0)
 					BINDIR="OpenBSD-7.0"
+					LD_LIBRARY_PATH=${SCRIPTS_DIR}/../${BINDIR}/SYS/
 					;;
 			esac
 			;;
