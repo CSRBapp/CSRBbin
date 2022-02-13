@@ -10,7 +10,7 @@ set mouse=
 
 sudo apt update
 
-sudo apt -y install net-tools tcpdump tmux netcat strace ncdu
+sudo apt -y install net-tools tcpdump tmux netcat strace ncdu xattr
 
 sudo apt -y install fuse3
 sudo sed -i "s/^#user_allow_other/user_allow_other/" /etc/fuse.conf
@@ -18,5 +18,3 @@ sudo sed -i "s/^#user_allow_other/user_allow_other/" /etc/fuse.conf
 sudo apt -y install zfs-fuse
 sudo service zfs-fuse --full-restart || true
 
-sudo apt -y install git-lfs
-git lfs pull
