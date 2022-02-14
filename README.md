@@ -1,19 +1,24 @@
 # Contents <!-- omit in toc -->
 
 - [Repository Cloning](#repository-cloning)
+- [Dockerisation](#dockerisation)
+	- [CSRBnode Image](#csrbnode-image)
 - [Start a CSRB Node application](#start-a-csrb-node-application)
 	- [Starting CSRBvfsFUSE](#starting-csrbvfsfuse)
 	- [Starting CSRBnode](#starting-csrbnode)
-- [Example User Application](#example-user-application)
+- [CSRBfs Examples](#csrbfs-examples)
+	- [Access Remote Node Files](#access-remote-node-files)
+- [CSRBvfsFUSE Examples](#csrbvfsfuse-examples)
 	- [ZFS Pool over CSRB](#zfs-pool-over-csrb)
 		- [Create a *zpool*](#create-a-zpool)
 			- [RAID0 / STRIPED](#raid0--striped)
 			- [RAIDZ1 / RAID5](#raidz1--raid5)
 		- [Import an existing *zpool*](#import-an-existing-zpool)
-	- [pyCSRB](#pycsrb)
-		- [Setup](#setup)
-		- [Run pyCSRB Demo](#run-pycsrb-demo)
+- [pyCSRB Examples](#pycsrb-examples)
+	- [Setup](#setup)
+	- [Run pyCSRB Demo](#run-pycsrb-demo)
 - [Gitpod Quickstart](#gitpod-quickstart)
+	- [TL;DR](#tldr)
 	- [Launch Workspace](#launch-workspace)
 	- [Configure Workspace](#configure-workspace)
 	- [Create the default STORAGE_PATH and VFS_MOUNTPOINT paths](#create-the-default-storage_path-and-vfs_mountpoint-paths)
@@ -72,7 +77,47 @@ BINDIR=[OSDIR] SCRIPTS/start-CSRBnode.sh
 *CSRBnode* acts as a passive CSRB Node without any local interactions.
 
 
-# Example User Application
+# CSRBfs Examples
+> [Website CSRBfs section](https://csrb.app/dev/CSRBfs.html)
+
+The Node's local FS instance can be easily accessed locally at:\
+```/tmp/CSRBVFS/FS/00000000000000000000000000000000```\
+or locally and remotely at:\
+```/tmp/CSRBVFS/FS/[NODEID]/```
+
+## Access Remote Node Files
+Example based on two Nodes running CSRBvfsFUSE.
+
+* Note down the Node IDs
+```shell
+nodeA$ ./SCRIPTS/host-NODEID.sh
+EF7986354B959AD59AB823660C6D67B3
+```
+```shell
+nodeB$ ./SCRIPTS/host-NODEID.sh
+B2FDE721800BBC2EFAE0EA8FDC1091AF
+```
+
+* Create Local Node Files
+```shell
+nodeA$ echo "This file is in Node A" > /tmp/CSRBVFS/FS/00000000000000000000000000000000/TestFile.txt
+```
+```shell
+nodeB$ cd /tmp/CSRBVFS/FS/00000000000000000000000000000000/
+nodeB$ echo "This file is in Node B" > /tmp/CSRBVFS/FS/00000000000000000000000000000000/TestFile.txt
+```
+
+* Access Remote Node Files
+```shell
+nodeA$ cat /tmp/CSRBVFS/FS/B2FDE721800BBC2EFAE0EA8FDC1091AF/TestFile.txt
+This file is in Node B
+```
+```shell
+nodeB$ cat /tmp/CSRBVFS/FS/EF7986354B959AD59AB823660C6D67B3/TestFile.txt
+This file is in Node A
+```
+
+# CSRBvfsFUSE Examples
 ## ZFS Pool over CSRB
 ### Create a *zpool*
 * CSRBvfsFUSE should be [running](#starting-csrbvfsfuse) before creating the ZFS Pool.
@@ -135,15 +180,15 @@ or with *bash* you can use:
 	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/{0..4}000000000000000000000000000000100008000
 ```
 
-## pyCSRB
-### Setup
+# pyCSRB Examples
+## Setup
 ```sh
 $ cd DEBIAN-TESTING
 $ ./decrypt.sh
 <ENTER DECRYPTION PASSWORD>
 ```
 
-### Run pyCSRB Demo
+## Run pyCSRB Demo
 ```sh
 $ cd pyCSRB
 $ LD_LIBRARY_PATH=../DEBIAN-TESTING python3 CSRBvfsDemo.py
@@ -154,9 +199,13 @@ $ LD_LIBRARY_PATH=../DEBIAN-TESTING python3 CSRBvfsDemo.py
 
 > **_NOTE_**\
 [2022/01/28]\
-Gitpod seems to have disabled (intentionally? accidentally?) outgoing UDP connections, so for the moment you can't join the CSRB network. 
+Gitpod seems to have disabled (intentionally? accidentally?) outgoing UDP connections, so for the moment you can't join the CSRB network.\
+[2022/02/13]\
+UDP connections are working again.
 
 ## TL;DR
+Quickstart steps:
+
 1. https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
 2. `./SCRIPTS/gitpod-configure.sh`
 3. `./SCRIPTS/start-CSRBvfsFUSE.sh`
@@ -165,12 +214,12 @@ Gitpod seems to have disabled (intentionally? accidentally?) outgoing UDP connec
 Open this link: https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
 
 > **_NOTE_**\
-If you *Stop* the Workspace or if it *times out* then all running applications will be stopped and the system configuration will be reset. When you restart the Workspace you need to reconfigure/reinstall/start everything from scratch. A [script](SCRIPTS/gitpod-configure.sh) is include to reconfigure/reinstall everything.
+If you *Stop* the Workspace, or if it *times out*, then all running applications will be stopped and the system configuration will be reset. When you restart the Workspace you need to reconfigure/reinstall/start everything from scratch. A [script](SCRIPTS/gitpod-configure.sh) is include to reconfigure/reinstall everything.
 
 ## Configure Workspace
 ```sh
 sudo apt update
-sudo apt -y install fuse3
+sudo apt -y install xattr fuse3
 sudo sed -i "s/^#user_allow_other/user_allow_other/" /etc/fuse.conf
 ```
 ## Create the default STORAGE_PATH and VFS_MOUNTPOINT paths
