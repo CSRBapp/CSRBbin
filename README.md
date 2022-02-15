@@ -45,6 +45,7 @@ git clone --depth 1 https://github.com/CSRBapp/CSRBbin
 wget https://github.com/CSRBapp/CSRBbin/archive/master.zip
 ```
 
+
 # Dockerisation
 ## CSRBnode Image
 `ghcr.io/csrbapp/csrbnode:master`
@@ -77,8 +78,15 @@ BINDIR=[OSDIR] SCRIPTS/start-CSRBnode.sh
 *CSRBnode* acts as a passive CSRB Node without any local interactions.
 
 
+# Demo Videos
+* [CSRBvfs Demo Videos](https://www.youtube.com/playlist?list=PLGTW-mypw2El_xzK4qTaxEFf5KzYAOBzv)
+* [CSRBfs Demo Videos](https://www.youtube.com/playlist?list=PLGTW-mypw2Ek5l4tW5D3hMdkhw2QFgK0p)
+
+
 # CSRBfs Examples
 > [Website CSRBfs section](https://csrb.app/dev/CSRBfs.html)
+
+> [CSRBfs Demo Videos](https://www.youtube.com/playlist?list=PLGTW-mypw2Ek5l4tW5D3hMdkhw2QFgK0p)
 
 The Node's local FS instance can be easily accessed locally at:\
 ```/tmp/CSRBVFS/FS/00000000000000000000000000000000```\
@@ -87,6 +95,8 @@ or locally and remotely at:\
 
 ## Access Remote Node Files
 Example based on two Nodes running CSRBvfsFUSE.
+
+> [Gitpod based Demo video](https://www.youtube.com/watch?v=mE5gtfCd2ug)
 
 * Note down the Node IDs
 ```shell
@@ -116,7 +126,11 @@ nodeB$ cat /tmp/CSRBVFS/FS/EF7986354B959AD59AB823660C6D67B3/TestFile.txt
 This file is in Node A
 ```
 
+
 # CSRBvfsFUSE Examples
+
+> [CSRBvfs Demo Videos](https://www.youtube.com/playlist?list=PLGTW-mypw2El_xzK4qTaxEFf5KzYAOBzv)
+
 ## ZFS Pool over CSRB
 ### Create a *zpool*
 * CSRBvfsFUSE should be [running](#starting-csrbvfsfuse) before creating the ZFS Pool.
@@ -178,6 +192,7 @@ or with *bash* you can use:
 ```sh
 	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/{0..4}000000000000000000000000000000100008000
 ```
+
 
 # pyCSRB Examples
 ## Setup
@@ -306,6 +321,7 @@ $ mkdir /tmp/CSRBSTORAGE
 $ cd pyCSRB
 $ LD_LIBRARY_PATH=../NetBSD-9.1/SYS:../NetBSD-9.1/ python3 CSRBvfsNode.py
 ```
+
 
 # NOTES
 
