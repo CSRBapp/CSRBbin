@@ -10,7 +10,7 @@ set mouse=
 
 sudo apt update
 
-sudo apt -y install net-tools tcpdump tmux netcat strace ncdu xattr
+sudo apt -y install net-tools tcpdump tmux netcat strace ncdu xattr iozone3
 
 sudo apt -y install fuse3
 sudo sed -i "s/^#user_allow_other/user_allow_other/" /etc/fuse.conf
