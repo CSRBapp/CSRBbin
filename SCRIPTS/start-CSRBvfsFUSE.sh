@@ -9,6 +9,7 @@ NODEID=${NODEID:+,nodeID=${NODEID}}
 STORAGE_PATH=${STORAGE_PATH:+,storagePath=${STORAGE_PATH}}
 VFS_MOUNTPOINT=${VFS_MOUNTPOINT:-/tmp/CSRBVFS}
 VFS_WORKERS_COUNT=${VFS_WORKERS_COUNT:+,vfsWorkersCount=${VFS_WORKERS_COUNT}}
+TRACEIO_ENABLE=${TRACEIO_ENABLE:-0}
 
 while [ ! -d "${VFS_MOUNTPOINT}" ]
 do
@@ -32,6 +33,7 @@ libfuse_max_background=64,\
 libfuse_attrs_timeout=5,\
 libfuse_direct_io=1,\
 force_open_direct_io=1,\
+traceio_enable=${TRACEIO_ENABLE},\
 bindHost=${BIND_IP},\
 bindPort=${BIND_PORT},\
 networkPacingRateKBps=${NETWORK_PACING_RATE_KBPS},\
