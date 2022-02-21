@@ -43,6 +43,13 @@ then
 			;;
 	esac
 
+	ARCH=`uname -m`
+	case ${ARCH} in
+		aarch64)
+			BINDIR+="-arm64"
+			;;
+	esac
+
 	if [ -v BINDIR ]
 	then
 		echo "BINDIR AUTODETECTED TO: ${BINDIR}"
