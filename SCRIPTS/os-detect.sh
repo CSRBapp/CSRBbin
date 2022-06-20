@@ -35,8 +35,8 @@ then
 		OpenBSD)
 			OS_RELEASE=`uname -r`
 			case ${OS_RELEASE} in
-				7.0)
-					BINDIR="OpenBSD-7.0"
+				7.1)
+					BINDIR="OpenBSD-7.1"
 					LD_LIBRARY_PATH=${SCRIPTS_DIR}/../${BINDIR}/SYS/
 					;;
 			esac
