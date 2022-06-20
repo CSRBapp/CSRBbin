@@ -1,11 +1,11 @@
 # Contents <!-- omit in toc -->
 
 - [Repository Cloning](#repository-cloning)
-- [Dockerisation](#dockerisation)
-	- [CSRBnode Image](#csrbnode-image)
-- [Start a CSRB Node application](#start-a-csrb-node-application)
+- [Starting a CSRB Node application](#starting-a-csrb-node-application)
 	- [Starting CSRBvfsFUSE](#starting-csrbvfsfuse)
 	- [Starting CSRBnode](#starting-csrbnode)
+	- [Configuration variables](#configuration-variables)
+- [Demo Videos](#demo-videos)
 - [CSRBfs Examples](#csrbfs-examples)
 	- [Access Remote Node Files](#access-remote-node-files)
 - [CSRBvfsFUSE Examples](#csrbvfsfuse-examples)
@@ -17,8 +17,8 @@
 - [pyCSRB Examples](#pycsrb-examples)
 	- [Setup](#setup)
 	- [Run pyCSRB Demo](#run-pycsrb-demo)
-- [Gitpod Quickstart](#gitpod-quickstart)
-	- [TL;DR](#tldr)
+- [Gitpod Guide](#gitpod-guide)
+	- [Quickstart](#quickstart)
 	- [Launch Workspace](#launch-workspace)
 	- [Configure Workspace](#configure-workspace)
 	- [Create the default STORAGE_PATH and VFS_MOUNTPOINT paths](#create-the-default-storage_path-and-vfs_mountpoint-paths)
@@ -30,10 +30,12 @@
 		- [Create RAID0](#create-raid0)
 		- [Create RAIDZ1](#create-raidz1)
 		- [Set *zCSRB* permissions](#set-zcsrb-permissions)
-- [NetBSD Quickstart](#netbsd-quickstart)
+- [NetBSD Guide](#netbsd-guide)
 	- [Setup](#setup-1)
 	- [Run pyCSRB Demo](#run-pycsrb-demo-1)
 	- [Run pyCSRB Node](#run-pycsrb-node)
+- [Dockerisation](#dockerisation)
+	- [CSRBnode Image](#csrbnode-image)
 - [NOTES](#notes)
 
 
@@ -48,7 +50,7 @@ wget https://github.com/CSRBapp/CSRBbin/archive/master.zip
 ```
 
 
-# Start a CSRB Node application
+# Starting a CSRB Node application
 
 You can run one of provided applications. With the default settings and certificates provided, they will connect to a public CSRB Network Router and provide access to the rest of the CSRB Network.
 
@@ -56,27 +58,45 @@ You can run one of provided applications. With the default settings and certific
 You can run multiple CSRB applications at the same time, one or more instances of each, as long as you provide a unique NODEID, STORAGE_PATH, and VFS_MOUNTPOINT for each.
 
 > **_NOTE_**\
-The STORAGE_PATH and VFS_MOUNTPOINT directories need to exist for the provided scripts to run. An error will be shown if any of the directories is found, so that you can create it.
-
-One of following *OSDIR* options has to be chosen to indicate which binaries are used by the scripts:
-* DEBIAN-TESTING
-* UBUNTU-18.04
-* UBUNTU-20.04
-* UBUNTU-20.04-arm64
-* NetBSD-9.1
-* OpenBSD-7.1
+The STORAGE_PATH and VFS_MOUNTPOINT directories need to exist for the provided scripts to run. A warning will be shown if any of the directories is found, and it will be automatically created if the user choses to proceed.
 
 ## Starting CSRBvfsFUSE
 ```sh
-BINDIR=[OSDIR] SCRIPTS/start-CSRBvfsFUSE.sh
+./SCRIPTS/start-CSRBvfsFUSE.sh
 ```
 *CSRBvfsFUSE* acts as a CSRB Node and also exposes a FUSE based VFS for external applications to easily access the OBJECT, MESSAGES, etc, services of the CSRB Network.
 
 ## Starting CSRBnode
 ```sh
-BINDIR=[OSDIR] SCRIPTS/start-CSRBnode.sh
+./SCRIPTS/start-CSRBnode.sh
 ```
 *CSRBnode* acts as a passive CSRB Node without any local interactions.
+
+## Configuration variables
+* TRACEIO=1\
+	Enable trace prints of VFS calls.
+* DIRECTIO=0\
+	Disable by-default DirectIO access.
+* ATTRS_TIMEOUT=x\
+	libfuse Attributes cache timeout (seconds).
+* BIND_IP=x\
+  Bind Router connection socket to specific IP.
+* BIND_PORT=x\
+  Bind Router connection socket to specific PORT.
+* NETWORK_PACING_RATE_KBPS=x\
+  Set interface / socket packet pacing rate (KBps) [where available].
+* ROUTER_HOST=x\
+  CSRB Router hostname.
+* ROUTER_PORT=x\
+  CSRB Router port.
+* ROUTER_INTERSPACE_USEC=x\
+  Try to add an (averaged) interspace delay between UDP packets sent to Router.
+* COMMAND_TIMEOUT=x\
+  Timeout of each sent CSRB command (msec).
+* COMMAND_TIMEOUT_RETRIES=x\
+  Number of retries sending a CSRB command.
+* VFS_WORKERS_COUNT=x\
+  Number of VFS Worker threads to spawn and use.
 
 
 # Demo Videos
@@ -224,7 +244,8 @@ UDP connections are working again.
 ## Quickstart
 1. https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
 2. `./SCRIPTS/gitpod-configure.sh`
-3. `./SCRIPTS/start-CSRBvfsFUSE.sh`
+3. `./SCRIPTS/tune-linux.sh`
+4. `./SCRIPTS/start-CSRBvfsFUSE.sh`
 
 ## Launch Workspace
 Open this link: https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
@@ -324,10 +345,12 @@ $ cd pyCSRB
 $ LD_LIBRARY_PATH=../NetBSD-9.1/SYS:../NetBSD-9.1/ python3 CSRBvfsNode.py
 ```
 
+
 # Dockerisation
 
 ## CSRBnode Image
 `ghcr.io/csrbapp/csrbnode:master`
+
 
 # NOTES
 
