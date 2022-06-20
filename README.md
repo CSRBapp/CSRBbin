@@ -36,7 +36,9 @@
 	- [Run pyCSRB Node](#run-pycsrb-node)
 - [NOTES](#notes)
 
+
 # Repository Cloning
+
 It is recommended that you clone a shallow repo, as the full history contains multiple binary files.
 
 ``` sh
@@ -46,11 +48,8 @@ wget https://github.com/CSRBapp/CSRBbin/archive/master.zip
 ```
 
 
-# Dockerisation
-## CSRBnode Image
-`ghcr.io/csrbapp/csrbnode:master`
-
 # Start a CSRB Node application
+
 You can run one of provided applications. With the default settings and certificates provided, they will connect to a public CSRB Network Router and provide access to the rest of the CSRB Network.
 
 > **_NOTE_**\
@@ -63,7 +62,9 @@ One of following *OSDIR* options has to be chosen to indicate which binaries are
 * DEBIAN-TESTING
 * UBUNTU-18.04
 * UBUNTU-20.04
-* NetBSD
+* UBUNTU-20.04-arm64
+* NetBSD-9.1
+* OpenBSD-7.1
 
 ## Starting CSRBvfsFUSE
 ```sh
@@ -79,12 +80,14 @@ BINDIR=[OSDIR] SCRIPTS/start-CSRBnode.sh
 
 
 # Demo Videos
+
 * [CSRBvfs Demo Videos](https://www.youtube.com/playlist?list=PLGTW-mypw2El_xzK4qTaxEFf5KzYAOBzv)
 * [CSRBfs Demo Videos](https://www.youtube.com/playlist?list=PLGTW-mypw2Ek5l4tW5D3hMdkhw2QFgK0p)
 
 
 # CSRBfs Examples
-> [Website CSRBfs section](https://csrb.app/dev/CSRBfs.html)
+
+> [CSRBfs Webpage](https://csrb.app/tech/CSRBfs.html)
 
 > [CSRBfs Demo Videos](https://www.youtube.com/playlist?list=PLGTW-mypw2Ek5l4tW5D3hMdkhw2QFgK0p)
 
@@ -195,6 +198,7 @@ or with *bash* you can use:
 
 
 # pyCSRB Examples
+
 ## Setup
 ```sh
 $ cd DEBIAN-TESTING
@@ -209,7 +213,7 @@ $ LD_LIBRARY_PATH=../DEBIAN-TESTING python3 CSRBvfsDemo.py
 ```
 
 
-# Gitpod Quickstart
+# Gitpod Guide
 
 > **_NOTE_**\
 [2022/01/28]\
@@ -217,9 +221,7 @@ Gitpod seems to have disabled (intentionally? accidentally?) outgoing UDP connec
 [2022/02/13]\
 UDP connections are working again.
 
-## TL;DR
-Quickstart steps:
-
+## Quickstart
 1. https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
 2. `./SCRIPTS/gitpod-configure.sh`
 3. `./SCRIPTS/start-CSRBvfsFUSE.sh`
@@ -300,7 +302,7 @@ sudo zpool create -o ashift=14 -O recordsize=64k \
 sudo chmod 777 /zCSRB
 ```
 
-# NetBSD Quickstart
+# NetBSD Guide
 
 ## Setup
 ```sh
@@ -322,6 +324,10 @@ $ cd pyCSRB
 $ LD_LIBRARY_PATH=../NetBSD-9.1/SYS:../NetBSD-9.1/ python3 CSRBvfsNode.py
 ```
 
+# Dockerisation
+
+## CSRBnode Image
+`ghcr.io/csrbapp/csrbnode:master`
 
 # NOTES
 
