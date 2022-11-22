@@ -73,8 +73,8 @@ The STORAGE_PATH and VFS_MOUNTPOINT directories need to exist for the provided s
 *CSRBnode* acts as a passive CSRB Node without any local interactions.
 
 ## Configuration variables
-* TRACEIO=1\
-	Enable trace prints of VFS calls.
+* TRACEIO_ENABLE=1\
+	Enable trace prints of CSRBvfsFUSE VFS calls.
 * DIRECTIO=0\
 	Disable by-default DirectIO access.
 * ATTRS_TIMEOUT=x\
