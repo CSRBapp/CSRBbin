@@ -1,0 +1,3 @@
+[submodule "CSRBfsTweaks"]
+	path = CSRBfsTweaks
+	url = https://github.com/CSRBapp/CSRBfsTweaks.git
