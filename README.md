@@ -77,7 +77,7 @@ The STORAGE_PATH and VFS_MOUNTPOINT directories need to exist for the provided s
 	Enable trace prints of CSRBvfsFUSE VFS calls.
 * DIRECTIO=0\
 	Disable by-default DirectIO access.
-* ATTRS_TIMEOUT=x\
+* ATTR_TIMEOUT=x\
 	libfuse Attributes cache timeout (seconds).
 * BIND_IP=x\
   Bind Router connection socket to specific IP.

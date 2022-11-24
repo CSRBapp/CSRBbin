@@ -14,7 +14,7 @@ VFS_WORKERS_COUNT=${VFS_WORKERS_COUNT:+,vfsWorkersCount=${VFS_WORKERS_COUNT}}
 COMMAND_TIMEOUT=${COMMAND_TIMEOUT:+,commandTimeoutMS=${COMMAND_TIMEOUT}}
 COMMAND_TIMEOUT_RETRIES=${COMMAND_TIMEOUT_RETRIES:+,commandTimeoutRetries=${COMMAND_TIMEOUT_RETRIES}}
 
-ATTRS_TIMEOUT=${ATTRS_TIMEOUT:-30}
+ATTR_TIMEOUT=${ATTR_TIMEOUT:-60}
 
 TRACEIO_ENABLE=${TRACEIO_ENABLE:-0}
 
@@ -44,7 +44,7 @@ libfuse_max_read=1048576,\
 libfuse_max_write=1048576,\
 libfuse_max_readahead=0,\
 libfuse_max_background=32,\
-libfuse_attrs_timeout=${ATTRS_TIMEOUT},\
+libfuse_attr_timeout=${ATTR_TIMEOUT},\
 libfuse_direct_io=${DIRECTIO},\
 force_open_direct_io=${DIRECTIO},\
 traceio_enable=${TRACEIO_ENABLE},\
