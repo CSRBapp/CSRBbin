@@ -36,7 +36,8 @@ done
 BIN=${BINDIR}/CSRBvfsFUSE
 
 ${BIN} -o \
-nodev,\
+dev,\
+exec,\
 noatime,\
 allow_other,\
 libfuse_max_read=1048576,\
@@ -44,7 +45,7 @@ libfuse_max_write=1048576,\
 libfuse_max_readahead=0,\
 libfuse_max_background=32,\
 libfuse_attrs_timeout=${ATTRS_TIMEOUT},\
-libfuse_direct_io=1,\
+libfuse_direct_io=${DIRECTIO},\
 force_open_direct_io=${DIRECTIO},\
 traceio_enable=${TRACEIO_ENABLE},\
 bindHost=${BIND_IP},\
