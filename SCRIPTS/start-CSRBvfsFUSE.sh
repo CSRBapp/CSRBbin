@@ -6,25 +6,15 @@ source $(dirname $0)/env.sh
 
 NODEID=${NODEID:+,nodeID=${NODEID}}
 
+COMMAND_TIMEOUT=${COMMAND_TIMEOUT:+,commandTimeoutMS=${COMMAND_TIMEOUT}}
+COMMAND_TIMEOUT_RETRIES=${COMMAND_TIMEOUT_RETRIES:+,commandTimeoutRetries=${COMMAND_TIMEOUT_RETRIES}}
+
 STORAGE_PATH=${STORAGE_PATH:+,storagePath=${STORAGE_PATH}}
 
 VFS_MOUNTPOINT=${VFS_MOUNTPOINT:-/tmp/CSRBVFS}
 VFS_WORKERS_COUNT=${VFS_WORKERS_COUNT:+,vfsWorkersCount=${VFS_WORKERS_COUNT}}
 
-COMMAND_TIMEOUT=${COMMAND_TIMEOUT:+,commandTimeoutMS=${COMMAND_TIMEOUT}}
-COMMAND_TIMEOUT_RETRIES=${COMMAND_TIMEOUT_RETRIES:+,commandTimeoutRetries=${COMMAND_TIMEOUT_RETRIES}}
-
-ATTR_TIMEOUT=${ATTR_TIMEOUT:-60}
-
 TRACEIO_ENABLE=${TRACEIO_ENABLE:-0}
-
-# NOTE: libfuse_direct_io=0 uses pages for R/W in 4k chunks
-if [ -z "$NODIRECTIO" ]
-then
-        DIRECTIO=1
-else
-        DIRECTIO=0
-fi
 
 while [ ! -d "${VFS_MOUNTPOINT}" ]
 do
@@ -33,20 +23,49 @@ do
         mkdir -p "${VFS_MOUNTPOINT}"
 done
 
+# 32768 131072 262144 524288 1048576 2097152
+
+MAX_READ=${MAX_READ:-1048576}
+MAX_WRITE=${MAX_WRITE:-1048576}
+MAX_READAHEAD=${MAX_READAHEAD:-32768}
+MAX_BACKGROUND=${MAX_BACKGROUND:-1024}
+CONGESTION_THRESHOLD=${CONGESTION_THRESHOLD:-8192}
+WRITEBACK_CACHE=${WRITEBACK_CACHE:-0}
+
+if [ -n "${DIRECTIO}" ]
+then
+        DIRECTIO="directio,"
+fi
+OPEN_DIRECTIO=${OPEN_DIRECTIO:-0}
+
+if [ -n "${AUTO_CACHE}" ]
+then
+        AUTO_CACHE="auto_cache,"
+fi
+
+ENTRY_TIMEOUT=${ENTRY_TIMEOUT:-37}
+ATTR_TIMEOUT=${ATTR_TIMEOUT:-${ENTRY_TIMEOUT}}
+AC_ATTR_TIMEOUT=${AC_ATTR_TIMEOUT:-${ATTR_TIMEOUT}}
+NEGATIVE_TIMEOUT=${NEGATIVE_TIMEOUT:-0}
+
 BIN=${BINDIR}/CSRBvfsFUSE
 
 ${BIN} -o \
 dev,\
-exec,\
 noatime,\
 allow_other,\
-libfuse_max_read=1048576,\
-libfuse_max_write=1048576,\
-libfuse_max_readahead=0,\
-libfuse_max_background=32,\
-libfuse_attr_timeout=${ATTR_TIMEOUT},\
-libfuse_direct_io=${DIRECTIO},\
-force_open_direct_io=${DIRECTIO},\
+default_permissions,\
+${AUTO_CACHE}\
+force_open_direct_io=${OPEN_DIRECTIO},\
+max_read=${MAX_READ},\
+max_write=${MAX_WRITE},\
+max_readahead=${MAX_READAHEAD},\
+max_background=${MAX_BACKGROUND},\
+congestion_threshold=${CONGESTION_THRESHOLD},\
+entry_timeout=${ENTRY_TIMEOUT},\
+attr_timeout=${ATTR_TIMEOUT},\
+ac_attr_timeout=${AC_ATTR_TIMEOUT},\
+negative_timeout=${NEGATIVE_TIMEOUT},\
 traceio_enable=${TRACEIO_ENABLE},\
 bindHost=${BIND_IP},\
 bindPort=${BIND_PORT},\
@@ -56,12 +75,15 @@ routerPort=${ROUTER_PORT},\
 routerInterspaceUSEC=${ROUTER_INTERSPACE_USEC},\
 nodeCAcertificateFile=${CA_CERT},\
 nodeCertificateFile=${NODE_CERT},\
-accessCertificateFile=${ACCESS_CERT},\
 enableMicropython\
 ${NODEID}\
 ${STORAGE_PATH}\
 ${COMMAND_TIMEOUT}\
 ${COMMAND_TIMEOUT_RETRIES}\
 ${VFS_WORKERS_COUNT}\
- -f ${VFS_MOUNTPOINT}
+ \
+ -f \
+${VFS_MOUNTPOINT}
+
+# -d : libfuse debug mode
 
