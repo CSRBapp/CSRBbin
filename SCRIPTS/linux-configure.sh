@@ -10,7 +10,7 @@ set mouse=
 
 sudo apt update
 
-sudo apt -y install net-tools tcpdump tmux netcat strace ncdu xattr iozone3
+sudo apt -y install net-tools tcpdump tmux netcat strace ncdu xattr iozone3 expect
 
 sudo apt -y install debootstrap
 
