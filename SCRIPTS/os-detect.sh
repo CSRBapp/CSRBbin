@@ -28,7 +28,6 @@ then
 			case ${OS_RELEASE} in
 				9.1)
 					BINDIR="NetBSD-9.1"
-					LD_LIBRARY_PATH=${SCRIPTS_DIR}/../${BINDIR}/SYS/
 					;;
 			esac
 			;;
@@ -37,7 +36,6 @@ then
 			case ${OS_RELEASE} in
 				7.1)
 					BINDIR="OpenBSD-7.1"
-					LD_LIBRARY_PATH=${SCRIPTS_DIR}/../${BINDIR}/SYS/
 					;;
 			esac
 			;;
@@ -61,6 +59,8 @@ then
 	echo "BINDIR not set and cannot be AUTODETECTED"
 	exit -1
 fi
+
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${SCRIPTS_DIR}/../${BINDIR}/SYS/
 
 export OS
 export OS_RELEASE
