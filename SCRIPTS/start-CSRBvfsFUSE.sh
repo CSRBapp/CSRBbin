@@ -11,17 +11,13 @@ COMMAND_TIMEOUT_RETRIES=${COMMAND_TIMEOUT_RETRIES:+,commandTimeoutRetries=${COMM
 
 STORAGE_PATH=${STORAGE_PATH:+,storagePath=${STORAGE_PATH}}
 
+ENABLE_MICROPYTHON=${ENABLE_MICROPYTHON:-1}
+ENABLE_LAN=${ENABLE_LAN:-1}
+
 VFS_MOUNTPOINT=${VFS_MOUNTPOINT:-/tmp/CSRBVFS}
 VFS_WORKERS_COUNT=${VFS_WORKERS_COUNT:+,vfsWorkersCount=${VFS_WORKERS_COUNT}}
 
 TRACEIO_ENABLE=${TRACEIO_ENABLE:-0}
-
-while [ ! -d "${VFS_MOUNTPOINT}" ]
-do
-	echo "VFS_MOUNTPOINT (${VFS_MOUNTPOINT}) does not exist"
-        read -p "Press ENTER to create it, or CTRL-C to abort..."
-        mkdir -p "${VFS_MOUNTPOINT}"
-done
 
 # 32768 131072 262144 524288 1048576 2097152
 
@@ -32,15 +28,19 @@ MAX_BACKGROUND=${MAX_BACKGROUND:-1024}
 CONGESTION_THRESHOLD=${CONGESTION_THRESHOLD:-8192}
 WRITEBACK_CACHE=${WRITEBACK_CACHE:-0}
 
-if [ -n "${DIRECTIO}" ]
+if [ -n "${DIRECTIO}" ] && [ "${DIRECTIO}" -ne 0 ]
 then
-        DIRECTIO="directio,"
+	DIRECTIO="directio,"
+else
+	DIRECTIO="nodirectio,"
 fi
 OPEN_DIRECTIO=${OPEN_DIRECTIO:-0}
 
-if [ -n "${AUTO_CACHE}" ]
+if [ -n "${AUTO_CACHE}" ] && [ "${DIRECTIO}" -ne 0 ]
 then
-        AUTO_CACHE="auto_cache,"
+	AUTO_CACHE="auto_cache,"
+else
+	AUTO_CACHE="noauto_cache,"
 fi
 
 ENTRY_TIMEOUT=${ENTRY_TIMEOUT:-37}
@@ -49,6 +49,13 @@ AC_ATTR_TIMEOUT=${AC_ATTR_TIMEOUT:-${ATTR_TIMEOUT}}
 NEGATIVE_TIMEOUT=${NEGATIVE_TIMEOUT:-0}
 
 BIN=${BINDIR}/CSRBvfsFUSE
+
+while [ ! -d "${VFS_MOUNTPOINT}" ]
+do
+	echo "VFS_MOUNTPOINT (${VFS_MOUNTPOINT}) does not exist"
+	read -p "Press ENTER to create it, or CTRL-C to abort..."
+	mkdir -p "${VFS_MOUNTPOINT}"
+done
 
 ${BIN} -o \
 dev,\
@@ -75,14 +82,15 @@ routerPort=${ROUTER_PORT},\
 routerInterspaceUSEC=${ROUTER_INTERSPACE_USEC},\
 nodeCAcertificateFile=${CA_CERT},\
 nodeCertificateFile=${NODE_CERT},\
-enableMicropython\
+enableMicropython=${ENABLE_MICROPYTHON},\
+enableLAN=${ENABLE_LAN}\
 ${NODEID}\
 ${STORAGE_PATH}\
 ${COMMAND_TIMEOUT}\
 ${COMMAND_TIMEOUT_RETRIES}\
 ${VFS_WORKERS_COUNT}\
  \
- -f \
+-f \
 ${VFS_MOUNTPOINT}
 
 # -d : libfuse debug mode
