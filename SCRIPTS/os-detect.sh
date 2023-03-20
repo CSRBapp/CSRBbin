@@ -26,8 +26,8 @@ then
 		NetBSD)
 			OS_RELEASE=`uname -r`
 			case ${OS_RELEASE} in
-				9.1)
-					BINDIR="NetBSD-9.1"
+				9.3)
+					BINDIR="NetBSD-9.3"
 					;;
 			esac
 			;;
