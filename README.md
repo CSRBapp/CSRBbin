@@ -243,7 +243,7 @@ UDP connections are working again.
 
 ## Quickstart
 1. https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
-2. `./SCRIPTS/gitpod-configure.sh`
+2. `./SCRIPTS/linux-configure.sh`
 3. `./SCRIPTS/tune-linux.sh`
 4. `./SCRIPTS/start-CSRBvfsFUSE.sh`
 
