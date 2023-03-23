@@ -19,6 +19,9 @@ then
 						20.04)
 							BINDIR="UBUNTU-20.04"
 							;;
+						22.04)
+							BINDIR="UBUNTU-22.04"
+							;;
 					esac
 					;;
 			esac
