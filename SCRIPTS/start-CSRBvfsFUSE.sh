@@ -27,16 +27,9 @@ MAX_READAHEAD=${MAX_READAHEAD:-32768}
 MAX_BACKGROUND=${MAX_BACKGROUND:-1024}
 CONGESTION_THRESHOLD=${CONGESTION_THRESHOLD:-8192}
 WRITEBACK_CACHE=${WRITEBACK_CACHE:-0}
+DIRECTIO=${DIRECTIO:-0}
 
-if [ -n "${DIRECTIO}" ] && [ "${DIRECTIO}" -ne 0 ]
-then
-	DIRECTIO="directio,"
-else
-	DIRECTIO="nodirectio,"
-fi
-OPEN_DIRECTIO=${OPEN_DIRECTIO:-0}
-
-if [ -n "${AUTO_CACHE}" ] && [ "${DIRECTIO}" -ne 0 ]
+if [ -n "${AUTO_CACHE}" ]
 then
 	AUTO_CACHE="auto_cache,"
 else
@@ -62,8 +55,10 @@ dev,\
 noatime,\
 allow_other,\
 default_permissions,\
+max_threads=256,\
+max_idle_threads=256,\
 ${AUTO_CACHE}\
-force_open_direct_io=${OPEN_DIRECTIO},\
+force_open_direct_io=${DIRECTIO},\
 max_read=${MAX_READ},\
 max_write=${MAX_WRITE},\
 max_readahead=${MAX_READAHEAD},\
@@ -83,7 +78,7 @@ routerInterspaceUSEC=${ROUTER_INTERSPACE_USEC},\
 nodeCAcertificateFile=${CA_CERT},\
 nodeCertificateFile=${NODE_CERT},\
 enableMicropython=${ENABLE_MICROPYTHON},\
-enableLAN=${ENABLE_LAN}\
+enableLAN=${ENABLE_LAN},\
 ${NODEID}\
 ${STORAGE_PATH}\
 ${COMMAND_TIMEOUT}\
