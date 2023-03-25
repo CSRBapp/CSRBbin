@@ -4,6 +4,8 @@ source $(dirname $0)/os-detect.sh
 source $(dirname $0)/env.sh
 . $(dirname $0)/checks.sh
 
+###
+
 NODEID=${NODEID:+,nodeID=${NODEID}}
 
 COMMAND_TIMEOUT=${COMMAND_TIMEOUT:+,commandTimeoutMS=${COMMAND_TIMEOUT}}
@@ -41,6 +43,17 @@ ATTR_TIMEOUT=${ATTR_TIMEOUT:-${ENTRY_TIMEOUT}}
 AC_ATTR_TIMEOUT=${AC_ATTR_TIMEOUT:-${ATTR_TIMEOUT}}
 NEGATIVE_TIMEOUT=${NEGATIVE_TIMEOUT:-0}
 
+grep -sq max_threads \
+        /usr/lib/x86_64-linux-gnu/libfuse3.so* \
+        /lib/aarch64-linux-gnu/libfuse3.so*
+if [ "$?" -eq 0 ]
+then
+        PARAM_MAXTHREADS="max_threads=256,"
+        PARAM_MAXIDLETHREADS="max_idle_threads=256"
+fi
+
+###
+
 BIN=${BINDIR}/CSRBvfsFUSE
 
 while [ ! -d "${VFS_MOUNTPOINT}" ]
@@ -55,8 +68,8 @@ dev,\
 noatime,\
 allow_other,\
 default_permissions,\
-max_threads=256,\
-max_idle_threads=256,\
+${PARAM_MAXTHREADS}\
+${PARAM_MAXIDLETHREADS}\
 ${AUTO_CACHE}\
 force_open_direct_io=${DIRECTIO},\
 max_read=${MAX_READ},\
@@ -78,7 +91,7 @@ routerInterspaceUSEC=${ROUTER_INTERSPACE_USEC},\
 nodeCAcertificateFile=${CA_CERT},\
 nodeCertificateFile=${NODE_CERT},\
 enableMicropython=${ENABLE_MICROPYTHON},\
-enableLAN=${ENABLE_LAN},\
+enableLAN=${ENABLE_LAN}\
 ${NODEID}\
 ${STORAGE_PATH}\
 ${COMMAND_TIMEOUT}\
