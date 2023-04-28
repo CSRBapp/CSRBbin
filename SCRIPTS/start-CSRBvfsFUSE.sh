@@ -38,7 +38,7 @@ else
 	AUTO_CACHE="noauto_cache,"
 fi
 
-ENTRY_TIMEOUT=${ENTRY_TIMEOUT:-37}
+ENTRY_TIMEOUT=${ENTRY_TIMEOUT:-7}
 ATTR_TIMEOUT=${ATTR_TIMEOUT:-${ENTRY_TIMEOUT}}
 AC_ATTR_TIMEOUT=${AC_ATTR_TIMEOUT:-${ATTR_TIMEOUT}}
 NEGATIVE_TIMEOUT=${NEGATIVE_TIMEOUT:-0}
@@ -48,8 +48,8 @@ grep -sq max_threads \
         /lib/aarch64-linux-gnu/libfuse3.so*
 if [ "$?" -eq 0 ]
 then
-        PARAM_MAXTHREADS="max_threads=256,"
-        PARAM_MAXIDLETHREADS="max_idle_threads=256"
+        PARAM_MAXTHREADS="max_threads=64,"
+        PARAM_MAXIDLETHREADS="max_idle_threads=8"
 fi
 
 ###
