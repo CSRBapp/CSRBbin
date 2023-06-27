@@ -1,1 +1,0 @@
-../SCRIPTS/bins-encrypt.sh
