@@ -14,6 +14,7 @@
 		- [Configure Workspace](#configure-workspace)
 		- [Starting CSRBnode](#starting-csrbnode-1)
 		- [Starting CSRBvfsFUSE](#starting-csrbvfsfuse-1)
+	- [CSRBfs](#csrbfs)
 - [Dockerisation](#dockerisation)
 	- [CSRBnode Image](#csrbnode-image)
 - [Examples](#examples)
@@ -56,8 +57,9 @@ You can run multiple CSRB applications at the same time, one or more instances o
 ```
 
 ## Configuration ENV variables
-| CSRB | |
+| VARIABLE | DESCRIPTION |
 | --- | --- |
+| **CSRB** | |
 | `NODEID` | Set a custom NODEID (128bit HEX). |
 | `TRACEIO_ENABLE` | Enable trace prints of CSRBvfsFUSE VFS calls. |
 | `ROUTER_INTERSPACE_USEC` | Software-based delay to between sending CSRB Network communication blocks (useful to throttle down UDP bursts).  |
@@ -94,8 +96,8 @@ If connection to the CSRB Network fails then external UDP connections might be d
 
 ## Quickstart
 1. Create new Workspace: https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
-2. Configure system (need to rerun when Workspace is restarted): `./SCRIPTS/linux-configure.sh`
-3. Tune kernel (need to rerun when Workspace is restarted): `./SCRIPTS/tune-linux.sh`
+2. Configure system (need to rerun when Workspace is restarted): `sudo ./SCRIPTS/linux-configure.sh`
+3. Tune kernel (need to rerun when Workspace is restarted): `sudo ./SCRIPTS/tune-linux.sh`
 4. `./SCRIPTS/start-CSRBvfsFUSE.sh`\
 or \
 `TRACEIO_ENABLE=1 ./SCRIPTS/start-CSRBvfsFUSE.sh`
@@ -124,6 +126,13 @@ If you *Stop* the Workspace, or if it *times out*, then all running applications
 ### Starting CSRBvfsFUSE
 ```sh
 ./SCRIPTS/start-CSRBvfsFUSE.sh
+```
+
+## CSRBfs
+A VSCode Workspace that has `pyenv` uses a dynamic shell prompt that continuously checks for a `.python_version`, creating unnecessary file accesses.\
+You can disable that in the **current shell** with:
+```sh
+unset __vsc_original_prompt_command
 ```
 
 # Dockerisation
