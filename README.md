@@ -1,374 +1,134 @@
 # Contents <!-- omit in toc -->
 
+- [CSRBapp](#csrbapp)
+	- [Demo Videos](#demo-videos)
 - [Repository Cloning](#repository-cloning)
-- [Starting a CSRB Node application](#starting-a-csrb-node-application)
-	- [Starting CSRBvfsFUSE](#starting-csrbvfsfuse)
+- [Starting a CSRB application](#starting-a-csrb-application)
 	- [Starting CSRBnode](#starting-csrbnode)
-	- [Configuration variables](#configuration-variables)
-- [Demo Videos](#demo-videos)
-- [CSRBfs Examples](#csrbfs-examples)
-	- [Access Remote Node Files](#access-remote-node-files)
-- [CSRBvfsFUSE Examples](#csrbvfsfuse-examples)
-	- [ZFS Pool over CSRB](#zfs-pool-over-csrb)
-		- [Create a *zpool*](#create-a-zpool)
-			- [RAID0 / STRIPED](#raid0--striped)
-			- [RAIDZ1 / RAID5](#raidz1--raid5)
-		- [Import an existing *zpool*](#import-an-existing-zpool)
-- [pyCSRB Examples](#pycsrb-examples)
-	- [Setup](#setup)
-	- [Run pyCSRB Demo](#run-pycsrb-demo)
+	- [Starting CSRBvfsFUSE](#starting-csrbvfsfuse)
+	- [Configuration ENV variables](#configuration-env-variables)
 - [Gitpod Guide](#gitpod-guide)
 	- [Quickstart](#quickstart)
-	- [Launch Workspace](#launch-workspace)
-	- [Configure Workspace](#configure-workspace)
-	- [Create the default STORAGE_PATH and VFS_MOUNTPOINT paths](#create-the-default-storage_path-and-vfs_mountpoint-paths)
-	- [Start CSRBvfsFUSE](#start-csrbvfsfuse)
-	- [Run the ZFS Pool example](#run-the-zfs-pool-example)
-		- [Install ZFS-FUSE](#install-zfs-fuse)
-		- [ZFS-FUSE limitations](#zfs-fuse-limitations)
-		- [ZFS-FUSE forced shutdown](#zfs-fuse-forced-shutdown)
-		- [Create RAID0](#create-raid0)
-		- [Create RAIDZ1](#create-raidz1)
-		- [Set *zCSRB* permissions](#set-zcsrb-permissions)
-- [NetBSD Guide](#netbsd-guide)
-	- [Setup](#setup-1)
-	- [Run pyCSRB Demo](#run-pycsrb-demo-1)
-	- [Run pyCSRB Node](#run-pycsrb-node)
+	- [Slowstart](#slowstart)
+		- [Launch Workspace](#launch-workspace)
+		- [Configure Workspace](#configure-workspace)
+		- [Starting CSRBnode](#starting-csrbnode-1)
+		- [Starting CSRBvfsFUSE](#starting-csrbvfsfuse-1)
 - [Dockerisation](#dockerisation)
 	- [CSRBnode Image](#csrbnode-image)
-- [NOTES](#notes)
+- [Examples](#examples)
 
+
+# CSRBapp
+This is the binary distribution of the [CSRBapp](https://csrb.app) middelware project.
+
+## Demo Videos
+* [CSRBvfs Demo Videos](https://www.youtube.com/playlist?list=PLGTW-mypw2El_xzK4qTaxEFf5KzYAOBzv) | [CSRBvfs webpage](https://csrb.app/tech/CSRBvfs.html)
+* [CSRBfs Demo Videos](https://www.youtube.com/playlist?list=PLGTW-mypw2Ek5l4tW5D3hMdkhw2QFgK0p) | [CSRBfs webpage](https://csrb.app/tech/CSRBfs.html)
+* [CSRB Embedded Cluster Demo Videos](https://www.youtube.com/playlist?list=PLGTW-mypw2Elqrxm2C230f2VlT9zzYOai) | [CSRBbbb webpage](https://csrb.app/tech/CSRBbbb.html)
 
 # Repository Cloning
-
 It is recommended that you clone a shallow repo, as the full history contains multiple binary files.
-
 ``` sh
 git clone --depth 1 https://github.com/CSRBapp/CSRBbin
 # or
 wget https://github.com/CSRBapp/CSRBbin/archive/master.zip
 ```
 
+# Starting a CSRB application
+You can run one of the two provided applications, `CSRBnode` or `CSRBvfsFUSE`.
+* `CSRBnode` creates a background CSRB Node instance.
+* `CSRBvfsFUSE` creates a CSRB Node instance with a foreground FUSE mount to the CSRBvfs layer.
 
-# Starting a CSRB Node application
-
-You can run one of provided applications. With the default settings and certificates provided, they will connect to a public CSRB Network Router and provide access to the rest of the CSRB Network.
+With the default settings and certificates provided, the applications will connect to a development public CSRB Network Router and provide access to the rest of the CSRB development network.
 
 > **_NOTE_**\
-You can run multiple CSRB applications at the same time, one or more instances of each, as long as you provide a unique NODEID, STORAGE_PATH, and VFS_MOUNTPOINT for each.
-
-> **_NOTE_**\
-The STORAGE_PATH and VFS_MOUNTPOINT directories need to exist for the provided scripts to run. A warning will be shown if any of the directories is found, and it will be automatically created if the user choses to proceed.
-
-## Starting CSRBvfsFUSE
-```sh
-./SCRIPTS/start-CSRBvfsFUSE.sh
-```
-*CSRBvfsFUSE* acts as a CSRB Node and also exposes a FUSE based VFS for external applications to easily access the OBJECT, MESSAGES, etc, services of the CSRB Network.
+You can run multiple CSRB applications at the same time, one or more instances of each, as long as set a unique NODEID, STORAGE_PATH, and VFS_MOUNTPOINT.
 
 ## Starting CSRBnode
 ```sh
 ./SCRIPTS/start-CSRBnode.sh
 ```
-*CSRBnode* acts as a passive CSRB Node without any local interactions.
 
-## Configuration variables
-* TRACEIO_ENABLE=1\
-	Enable trace prints of CSRBvfsFUSE VFS calls.
-* DIRECTIO=0\
-	Disable by-default DirectIO access.
-* ATTR_TIMEOUT=x\
-	libfuse Attributes cache timeout (seconds).
-* BIND_IP=x\
-  Bind Router connection socket to specific IP.
-* BIND_PORT=x\
-  Bind Router connection socket to specific PORT.
-* NETWORK_PACING_RATE_KBPS=x\
-  Set interface / socket packet pacing rate (KBps) [where available].
-* ROUTER_HOST=x\
-  CSRB Router hostname.
-* ROUTER_PORT=x\
-  CSRB Router port.
-* ROUTER_INTERSPACE_USEC=x\
-  Try to add an (averaged) interspace delay between UDP packets sent to Router.
-* COMMAND_TIMEOUT=x\
-  Timeout of each sent CSRB command (msec).
-* COMMAND_TIMEOUT_RETRIES=x\
-  Number of retries sending a CSRB command.
-* VFS_WORKERS_COUNT=x\
-  Number of VFS Worker threads to spawn and use.
-
-
-# Demo Videos
-
-* [CSRBvfs Demo Videos](https://www.youtube.com/playlist?list=PLGTW-mypw2El_xzK4qTaxEFf5KzYAOBzv)
-* [CSRBfs Demo Videos](https://www.youtube.com/playlist?list=PLGTW-mypw2Ek5l4tW5D3hMdkhw2QFgK0p)
-
-
-# CSRBfs Examples
-
-> [CSRBfs Webpage](https://csrb.app/tech/CSRBfs.html)
-
-> [CSRBfs Demo Videos](https://www.youtube.com/playlist?list=PLGTW-mypw2Ek5l4tW5D3hMdkhw2QFgK0p)
-
-The Node's local FS instance can be easily accessed locally at:\
-```/tmp/CSRBVFS/FS/00000000000000000000000000000000```\
-or locally and remotely at:\
-```/tmp/CSRBVFS/FS/[NODEID]/```
-
-## Access Remote Node Files
-Example based on two Nodes running CSRBvfsFUSE.
-
-> [Gitpod based Demo video](https://www.youtube.com/watch?v=mE5gtfCd2ug)
-
-* Note down the Node IDs
-```shell
-nodeA$ ./SCRIPTS/host-NODEID.sh
-EF7986354B959AD59AB823660C6D67B3
-```
-```shell
-nodeB$ ./SCRIPTS/host-NODEID.sh
-B2FDE721800BBC2EFAE0EA8FDC1091AF
-```
-
-* Create Local Node Files
-```shell
-nodeA$ echo "This file is in Node A" > /tmp/CSRBVFS/FS/00000000000000000000000000000000/TestFile.txt
-```
-```shell
-nodeB$ echo "This file is in Node B" > /tmp/CSRBVFS/FS/00000000000000000000000000000000/TestFile.txt
-```
-
-* Access Remote Node Files
-```shell
-nodeA$ cat /tmp/CSRBVFS/FS/B2FDE721800BBC2EFAE0EA8FDC1091AF/TestFile.txt
-This file is in Node B
-```
-```shell
-nodeB$ cat /tmp/CSRBVFS/FS/EF7986354B959AD59AB823660C6D67B3/TestFile.txt
-This file is in Node A
-```
-
-
-# CSRBvfsFUSE Examples
-
-> [CSRBvfs Demo Videos](https://www.youtube.com/playlist?list=PLGTW-mypw2El_xzK4qTaxEFf5KzYAOBzv)
-
-## ZFS Pool over CSRB
-### Create a *zpool*
-* CSRBvfsFUSE should be [running](#starting-csrbvfsfuse) before creating the ZFS Pool.
-* The CSRB OBJECTBLOCK size is 32KB so *ashift* should be set to 15 (2^15).
-* Need to set the ZFS directory permissions if you want to write to it as a user:\
-	`sudo chmod go+w /zCSRB`
-
-#### RAID0 / STRIPED
+## Starting CSRBvfsFUSE
 ```sh
-sudo zpool create -o ashift=15 -O recordsize=32k \
-	-o feature@large_dnode=enabled \
-	-O dnodesize=auto \
-	-O xattr=sa \
-	-O atime=off \
-	-O compression=off \
-	-O primarycache=metadata \
-	-f zCSRB \
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/0000000000000000000000000000000100008000 \
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/1000000000000000000000000000000100008000 \
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/2000000000000000000000000000000100008000 \
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/3000000000000000000000000000000100008000
-```
-or with *bash* you can use:
-```sh
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/{0..3}000000000000000000000000000000100008000
+./SCRIPTS/start-CSRBvfsFUSE.sh
 ```
 
-#### RAIDZ1 / RAID5
-```sh
-sudo zpool create -o ashift=15 -O recordsize=128k \
-	-o feature@large_dnode=enabled \
-	-O dnodesize=auto \
-	-O xattr=sa \
-	-O atime=off \
-	-O compression=off \
-	-O primarycache=metadata \
-	-f zCSRB raidz1 \
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/0000000000000000000000000000000100008000 \
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/1000000000000000000000000000000100008000 \
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/2000000000000000000000000000000100008000 \
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/3000000000000000000000000000000100008000 \
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/4000000000000000000000000000000100008000
-```
-or with *bash* you can use:
-```sh
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/{0..4}000000000000000000000000000000100008000
-```
-
-### Import an existing *zpool*
-```sh
-sudo zpool import \
-	-d /tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/0000000000000000000000000000000100008000 \
-	-d /tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/1000000000000000000000000000000100008000 \
-	-d /tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/2000000000000000000000000000000100008000 \
-	-d /tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/3000000000000000000000000000000100008000 \
-	-d /tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/4000000000000000000000000000000100008000
-```
-or with *bash* you can use:
-```sh
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/{0..4}000000000000000000000000000000100008000
-```
-
-
-# pyCSRB Examples
-
-## Setup
-```sh
-$ cd DEBIAN-TESTING
-$ ./decrypt.sh
-<ENTER DECRYPTION PASSWORD>
-```
-
-## Run pyCSRB Demo
-```sh
-$ cd pyCSRB
-$ LD_LIBRARY_PATH=../DEBIAN-TESTING python3 CSRBvfsDemo.py
-```
-
+## Configuration ENV variables
+| CSRB | |
+| --- | --- |
+| `NODEID` | Set a custom NODEID (128bit HEX). |
+| `TRACEIO_ENABLE` | Enable trace prints of CSRBvfsFUSE VFS calls. |
+| `ROUTER_INTERSPACE_USEC` | Software-based delay to between sending CSRB Network communication blocks (useful to throttle down UDP bursts).  |
+| `NETWORK_PACING_RATE_KBPS` | Set interface / socket packet pacing rate (KBps) [if available by the OS]. |
+| `COMMAND_TIMEOUT` | Timeout of each sent CSRB command (msec). |
+| `COMMAND_TIMEOUT_RETRIES` | Number of retries sending a CSRB command. |
+| `STORAGE_PATH` | Local directory to store the DB. |
+| `ENABLE_MICROPYTHON` | Enable execution of Micropython code. |
+| `ENABLE_LAN` | Enable P2P discovery and connection to other CSRB Nodes in the local network (bypasses Router for these Nodes) |
+| `VFS_WORKERS_COUNT` | Number of VFS Worker threads to spawn and use. |
+| **LIBFUSE** | |
+| `MAX_READ` | libfuse `max_read` : Maximum size of read requests. A value of zero indicates no limit. However, even if the filesystem does not specify a limit, the maximum size of read requests will still be limited by the kernel. |
+| `MAX_WRITE` | libfuse `max_write` : Maximum size of the write buffer. |
+| `MAX_READAHEAD` | libfuse `max_readahead` : Maximum readahead. |
+| `MAX_BACKGROUND` | libfuse `max_background` : Maximum number of pending "background" requests. A background request is any type of request for which the total number is not limited by other means. |
+| `CONGESTION_THRESHOLD` | libfuse `congestion_threshold` : Kernel congestion threshold parameter. If the number of pending background requests exceeds this number, the FUSE kernel module will mark the filesystem as "congested". |
+| `DIRECTIO` | libfuse `direct_io` : Disable the use of page cache (file content cache) in the kernel for this filesystem. _Forces all open() to use O_DIRECT |
+| `AUTO_CACHE` | libfuse `auto_cache` : The cached data is invalidated on open(2) if if the modification time or the size of the file has changed since it was last opened. |
+| `ATTR_TIMEOUT` | libfuse `attr_timeout` : The timeout in seconds for which file/directory attributes (as returned by e.g. the getattr handler) are cached. |
+| `AC_ATTR_TIMEOUT` | libfuse `ac_attr_timeout_sec` : The timeout in seconds for which file attributes are cached for the purpose of checking if auto_cache should flush the file data on open.  |
+| `ENTRY_TIMEOUT` | libfuse `entry_timeout` : The timeout in seconds for which name lookups will be cached. |
+| `NEGATIVE_TIMEOUT` | libfuse `negative_timeout` : The timeout in seconds for which a negative lookup will be cached. This means, that if file did not exist (lookup returned ENOENT), the lookup will only be redone after the timeout, and the file/directory will be assumed to not exist until then. A value of zero means that negative lookups are not cached.  |
 
 # Gitpod Guide
+[Gitpod](https://gitpod.io) is awesome!
+
+> [Gitpod based Demo video of CSRBfs example](https://www.youtube.com/watch?v=mE5gtfCd2ug)
 
 > **_NOTE_**\
-[2022/01/28]\
-Gitpod seems to have disabled (intentionally? accidentally?) outgoing UDP connections, so for the moment you can't join the CSRB network.\
-[2022/02/13]\
-UDP connections are working again.
+If connection to the CSRB Network fails then external UDP connections might be disabled by Gitpod. \
+[2023/10/05]: UDP connections have been working great so far. \
+[2022/02/13]: UDP connections are working again. \
+[2022/01/28]: Gitpod seems to have disabled (intentionally? accidentally?) outgoing UDP connections, so for the moment you can't join the CSRB network.
 
 ## Quickstart
-1. https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
-2. `./SCRIPTS/linux-configure.sh`
-3. `./SCRIPTS/tune-linux.sh`
-4. `./SCRIPTS/start-CSRBvfsFUSE.sh`
+1. Create new Workspace: https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
+2. Configure system (need to rerun when Workspace is restarted): `./SCRIPTS/linux-configure.sh`
+3. Tune kernel (need to rerun when Workspace is restarted): `./SCRIPTS/tune-linux.sh`
+4. `./SCRIPTS/start-CSRBvfsFUSE.sh`\
+or \
+`TRACEIO_ENABLE=1 ./SCRIPTS/start-CSRBvfsFUSE.sh`
 
-## Launch Workspace
-Open this link: https://gitpod.io/#https://github.com/CSRBapp/CSRBbin
+## Slowstart
+### Launch Workspace
+Open this link: https://gitpod.io/#https://github.com/CSRBapp/CSRBbin \
+or \
+manually create a Workspace with the CSRBbin repo (`https://github.com/CSRBapp/CSRBbin`)
+
+### Configure Workspace
+The Workspace system to be updated and configured for the CSRB applications to work properly. A set of scripts are available to automate this process, and also add some useful tools.
+```sh
+./SCRIPTS/linux-configure.sh
+./SCRIPTS/tune-linux.sh
+```
 
 > **_NOTE_**\
-If you *Stop* the Workspace, or if it *times out*, then all running applications will be stopped and the system configuration will be reset. When you restart the Workspace you need to reconfigure/reinstall/start everything from scratch. A [script](SCRIPTS/gitpod-configure.sh) is include to reconfigure/reinstall everything.
+If you *Stop* the Workspace, or if it *times out*, then all running applications will be stopped and the system configuration will be reset When you restart the Workspace you need to configure it again.
 
-## Configure Workspace
+### Starting CSRBnode
 ```sh
-sudo apt update
-sudo apt -y install xattr fuse3
-sudo sed -i "s/^#user_allow_other/user_allow_other/" /etc/fuse.conf
-```
-## Create the default STORAGE_PATH and VFS_MOUNTPOINT paths
-```sh
-mkdir -p ~/CSRBSTORAGE/`SCRIPTS/host-NODEID.sh`
-mkdir /tmp/CSRBVFS
+./SCRIPTS/start-CSRBnode.sh
 ```
 
-## Start CSRBvfsFUSE
+### Starting CSRBvfsFUSE
 ```sh
-BINDIR=UBUNTU-20.04/ SCRIPTS/start-CSRBvfsFUSE.sh
+./SCRIPTS/start-CSRBvfsFUSE.sh
 ```
-
-## Run the [ZFS Pool](#zfs-pool-over-csrb) example
-It is not possible to use the proper OpenZFS implementaion within a Gitpod Workspace, due to the need for a kernel module and for elevated Docker privileges.
-
-It is possible though to use the old and deprecated ZFS-FUSE implementation that is still available in the package system.
-
-### Install ZFS-FUSE
-```sh
-sudo apt -y install zfs-fuse
-sudo service zfs-fuse --full-restart
-```
-
-### ZFS-FUSE limitations
-Due to the ZFS-FUSE being a much older ZFS implementation, the following configurations changed need to done:
-
-* **ashift=14**: ZFS-FUSE does not seem to support a 32KB sector alignment to match the CSRB OBJECT size of 32KB. Setting *ashift* to 15 is accepted during pool creation but the internal data end up being corrupted and the pool becoming unusable.
-* ~~**feature@large_dnode=enabled**~~: Not Supported
-* ~~**dnodesize=auto**~~: Not Supported
-
-### ZFS-FUSE forced shutdown
-If things get stuck and you can't cleanly export a *zpool*, you can kill and restart ZFS-FUSE:
-```sh
-sudo kill -9 `pidof zfs-fuse`
-sudo rm -f /var/run/zfs-fuse.pid
-sudo systemctl restart zfs-fuse
-```
-
-### Create RAID0
-```sh
-sudo zpool create -o ashift=14 -O recordsize=32k \
-	-O xattr=off \
-	-O atime=off \
-	-O compression=off \
-	-O primarycache=metadata \
-	-f zCSRB \
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/{0..3}000000000000000000000000000000100008000
-```
-
-### Create RAIDZ1
-```sh
-sudo zpool create -o ashift=14 -O recordsize=64k \
-	-O xattr=off \
-	-O atime=off \
-	-O compression=off \
-	-O primarycache=metadata \
-	-f zCSRB raidz1 \
-	/tmp/CSRBVFS/OBJECTBLOCK/00000000000000000000000000000000/{0..4}000000000000000000000000000000100008000
-```
-
-### Set *zCSRB* permissions
-```sh
-sudo chmod 777 /zCSRB
-```
-
-# NetBSD Guide
-
-## Setup
-```sh
-$ cd NetBSD-9.1
-$ LD_LIBRARY_PATH=SYS/ PATH=SYS/:${PATH} ./decrypt.sh
-<ENTER DECRYPTION PASSWORD>
-```
-
-## Run pyCSRB Demo
-```sh
-$ cd pyCSRB
-$ LD_LIBRARY_PATH=../NetBSD-9.1/SYS:../NetBSD-9.1/ python3 CSRBvfsDemo.py
-```
-
-## Run pyCSRB Node
-```sh
-$ mkdir /tmp/CSRBSTORAGE
-$ cd pyCSRB
-$ LD_LIBRARY_PATH=../NetBSD-9.1/SYS:../NetBSD-9.1/ python3 CSRBvfsNode.py
-```
-
 
 # Dockerisation
-
 ## CSRBnode Image
 `ghcr.io/csrbapp/csrbnode:master`
 
-
-# NOTES
-
-Useful strings for copy-pasting:
-
-```
-00000000000000000000000000000000
-0000000000000000000000000000000000000000
-```
-
-Helper commands:
-
-```
-sudo apt install tmux
-
-sudo watch -n 1 zpool status zCSRB
-sudo zpool iostat zCSRB -v 1
-sudo zpool scrub zCSRB
-
-dd if=/dev/urandom of=/zCSRB/fill bs=1M count=1k
-```
+# Examples
+[CSRB Examples](EXAMPLES.md)
