@@ -1,22 +1,28 @@
 #!/usr/bin/env bash
 
-set -x
 set -e
+
+if [ "$EUID" -ne 0 ]
+	then echo "Please run as root"
+	exit
+fi
+
+set -x
 
 echo '
 set bg=dark
 set mouse=
-' | sudo tee /etc/vim/vimrc.local >/dev/null
+' | tee /etc/vim/vimrc.local >/dev/null
 
-sudo apt update
+apt update
 
-sudo apt -y install net-tools tcpdump tmux netcat strace ncdu xattr iozone3 expect iotop iftop iptraf-ng
+apt -y install net-tools tcpdump tmux netcat strace ncdu xattr iozone3 expect iotop iftop iptraf-ng
 
-sudo apt -y install debootstrap
+apt -y install debootstrap
 
-sudo apt -y install fuse3
-sudo sed -i "s/^#user_allow_other/user_allow_other/" /etc/fuse.conf
+apt -y install fuse3
+sed -i "s/^#user_allow_other/user_allow_other/" /etc/fuse.conf
 
-sudo apt -y install zfs-fuse
-sudo service zfs-fuse --full-restart || true
+apt -y install zfs-fuse
+service zfs-fuse --full-restart || true
 

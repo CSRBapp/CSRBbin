@@ -1,3 +1,10 @@
+#!/usr/bin/env bash
+
+if [ "$EUID" -ne 0 ]
+	then echo "Please run as root"
+	exit
+fi
+
 # Default Socket Receive Buffer
 sysctl net.core.rmem_default=262144
 
