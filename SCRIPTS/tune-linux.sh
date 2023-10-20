@@ -18,19 +18,18 @@ sysctl net.core.wmem_default=262144
 sysctl net.core.wmem_max=33554432
 
 # Increase the maximum amount of option memory buffers
-sysctl net.core.optmem_max=268435456
+sysctl net.core.optmem_max=32768
 
 # Increase the maximum total buffer-space allocatable
 # This is measured in units of pages (4096 bytes)
-sysctl net.ipv4.udp_mem="65536 131072 262144"
+sysctl net.ipv4.udp_mem="131072 786432 1048576"
 
 # Increase the read-buffer space allocatable
-sysctl net.ipv4.udp_rmem_min=33554432
+sysctl net.ipv4.udp_rmem_min=32768
 
 # Increase the write-buffer-space allocatable
-sysctl net.ipv4.udp_wmem_min=33554432
+sysctl net.ipv4.udp_wmem_min=32768
 
 
 # enable SO_MAX_PACING_RATE
 tc qdisc add dev eth0 root fq limit 100000 flow_limit 10000
-
