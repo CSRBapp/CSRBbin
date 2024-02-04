@@ -49,7 +49,7 @@ grep -sq max_threads \
 if [ "$?" -eq 0 ]
 then
         PARAM_MAXTHREADS="max_threads=64,"
-        PARAM_MAXIDLETHREADS="max_idle_threads=8"
+        PARAM_MAXIDLETHREADS="max_idle_threads=8,"
 fi
 
 ###
@@ -84,7 +84,6 @@ negative_timeout=${NEGATIVE_TIMEOUT},\
 traceio_enable=${TRACEIO_ENABLE},\
 bindHost=${BIND_IP},\
 bindPort=${BIND_PORT},\
-networkPacingRateKBps=${NETWORK_PACING_RATE_KBPS},\
 routerHost=${ROUTER_HOST},\
 routerPort=${ROUTER_PORT},\
 routerInterspaceUSEC=${ROUTER_INTERSPACE_USEC},\
