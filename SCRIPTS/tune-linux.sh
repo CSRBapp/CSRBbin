@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 if [ "$EUID" -ne 0 ]
-	then echo "Need root!"
+then
+        echo "Script needs to be run as \"root\""
 	exit
 fi
 
