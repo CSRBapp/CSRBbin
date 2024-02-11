@@ -19,7 +19,7 @@ apt update
 
 apt -y install net-tools tcpdump tmux netcat strace ncdu xattr iozone3 expect iotop iftop iptraf-ng
 
-apt -y install debootstrap
+apt -y install debootstrap fakeroot
 
 apt -y install fuse3
 sed -i "s/^#user_allow_other/user_allow_other/" /etc/fuse.conf
