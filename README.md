@@ -18,6 +18,9 @@
 - [Dockerisation](#dockerisation)
 	- [CSRBnode Image](#csrbnode-image)
 - [Examples](#examples)
+- [Demos](#demos)
+	- [CSRBfs - debootstrap \[DEMO-DEBOOTSTRAP.sh\]](#csrbfs---debootstrap-demo-debootstrapsh)
+		- [Demonstration Videos](#demonstration-videos)
 
 
 # CSRBapp
@@ -141,3 +144,26 @@ unset __vsc_original_prompt_command
 
 # Examples
 [CSRB Examples](EXAMPLES.md)
+
+# Demos
+## CSRBfs - debootstrap [DEMO-DEBOOTSTRAP.sh]
+The [`SCRIPTS/DEMO-DEBOOTSTRAP.sh`](SCRIPTS/DEMO-DEBOOTSTRAP.sh) script is a demo / stress-test / benchmarking script that within the local NODE's CSRBfs it installs a **jammy** basic system using **debootstrap**, runs **debsums**, and rebuilds the **gcc-defaults** package from source. A whole bunch of packages and other stuff need to be done to complete these steps.
+
+This script provides a good stress-testing of the CSRBfs POSIX emulation, as it's extremely filesystem operations heavy (**dpkg** is a pain!).
+
+You can set `TRACEIO_ENABLE=1` when running `start-CSRBvfsFUSE.sh`, to see the gazillion FS syscalls executed.
+
+As **leveldb** is very hyperactive with its storaghe, it's better if you use **tmpfs** for **CSRBSTORAGE**:
+```
+mkdir ~/CSRBSTORAGE
+sudo mount -t tmpfs none ~/CSRBSTORAGE
+```
+
+<br>
+
+> **_NOTE_**\
+The script is configured to run within **GITPOD**, and within a `tmux` session running as **root**, having at least two panes with `0.1` running an idle shell.
+
+### Demonstration Videos
+* [DEMO-DEBOOTSTRAP.sh full run](https://www.youtube.com/watch?v=Gyx0KGruNV8)
+* [DEMO-DEBOOTSTRAP.sh partial run with TRACEIO_ENABLE](https://www.youtube.com/watch?v=3-9NXWtC4Og)
