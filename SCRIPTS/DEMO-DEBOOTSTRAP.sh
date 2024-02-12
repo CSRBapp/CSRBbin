@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if ! getent group gitpod > /dev/null
+then
+	echo "This script is configured to run in GITPOD"
+	exit 1
+fi
+
+
 # settings for gitpod
 CSRBBIN=/workspace/CSRBbin
 STORAGE=/workspace
@@ -11,6 +18,18 @@ CSRBVFS=/tmp/CSRBVFS
 TARGETDIR=jammy
 USE_TMPFS=1
 
+NPROC=`nproc`
+
+###
+
+fBINDDEV() {
+if [ ! -c "${CSRBVFS}/FS/${NODE}/${TARGETDIR}/slash/dev/null" ]
+then
+# in GITPOD we can't write to /dev/ so don't rbind it yet to allow apt to install stuff
+	mount --rbind /dev/ ${CSRBVFS}/FS/${NODE}/${TARGETDIR}/slash/dev
+fi
+}
+
 ###
 
 fRUNDEBOOTSTRAP() {
@@ -19,7 +38,7 @@ touch /tmp/demo-debootstrap-running
 tmux send-keys -t "${PANE_RUN}" "
 cd /tmp
 
-bash -evc \"
+bash -exc \"
 trap 'exit' SIGINT
 
 # wait for CSRBvfsFUSE to start
@@ -33,8 +52,9 @@ mkdir slash
 mkdir slash/debootstrap
 mount -t tmpfs none slash/debootstrap
 
+# in GITPOD we can't write to /dev/ so don't rbind it yet to allow apt to install stuff
 #mkdir slash/dev
-#mount --rbind /dev /dev
+#mount --rbind /dev/ slash/dev
 
 # create tmpfs scripts
 
@@ -95,8 +115,10 @@ fRUNDEBSUMS() {
 rm -f /tmp/demo-debsums-error
 touch /tmp/demo-debsums-running
 
+fBINDDEV
+
 tmux send-keys -t "${PANE_RUN}" "
-bash -evc \"
+bash -exc \"
 
 cd ${CSRBVFS}/FS/${NODE}/${TARGETDIR}
 
@@ -110,7 +132,7 @@ echo \\\"nameserver 1.1.1.1\\\" > slash/etc/resolv.conf
 chroot slash bash -c \\\"
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y locales debsums
-locale-gen en_GB.UTF-8
+locale-gen en_GB.UTF-8 en_US.UTF-8
 \\\"
 
 # run debsums
@@ -126,12 +148,14 @@ fEXTRA() {
 rm -f /tmp/demo-extra-error
 touch /tmp/demo-extra-running
 
+fBINDDEV
+
 tmux send-keys -t "${PANE_RUN}" "
-bash -evc \"
+bash -exc \"
 
 cd ${CSRBVFS}/FS/${NODE}/${TARGETDIR}
 
-chroot slash bash -evc \\\"
+chroot slash bash -exc \\\"
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y build-essential fakeroot devscripts
 DEBIAN_FRONTEND=noninteractive apt build-dep -y gcc-defaults
@@ -142,13 +166,13 @@ DEBIAN_FRONTEND=noninteractive apt source gcc-defaults
 
 echo \\\\\\\$(ls -d */)
 cd \\\\\\\$(ls -d */)
-time debuild -us -uc -i -I
-\\\"
-\" || touch /tmp/demo-extra-error
+time debuild -us -uc -i -I -j${NPROC}
+\\\" || touch /tmp/demo-extra-error
 
 # finish gracefully
 rm -f /tmp/demo-extra-running
 
+\"
 "
 }
 
@@ -178,4 +202,3 @@ if [ -f /tmp/demo-extra-error ]
 then
 	echo "FAILURE DETECTED"
 fi
-
