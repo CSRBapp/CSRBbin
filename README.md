@@ -157,6 +157,7 @@ As **leveldb** is very hyperactive with its storaghe, it's better if you use **t
 ```
 mkdir ~/CSRBSTORAGE
 sudo mount -t tmpfs none ~/CSRBSTORAGE
+sudo chown `id -u`:`id -g` ~/CSRBSTORAGE
 ```
 
 <br>
