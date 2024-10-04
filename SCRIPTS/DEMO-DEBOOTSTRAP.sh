@@ -22,10 +22,11 @@ NPROC=`nproc`
 
 ###
 
+# if the system does not allow us to create special files,
+# try to rbind the system's default /dev
 fBINDDEV() {
 if [ ! -c "${CSRBVFS}/FS/${NODE}/${TARGETDIR}/slash/dev/null" ]
 then
-# in GITPOD we can't write to /dev/ so don't rbind it yet to allow apt to install stuff
 	mount --rbind /dev/ ${CSRBVFS}/FS/${NODE}/${TARGETDIR}/slash/dev
 fi
 }
@@ -34,6 +35,10 @@ fi
 
 fRUNDEBOOTSTRAP() {
 touch /tmp/demo-debootstrap-running
+
+# in GITPOD we can't write to /dev/ so don't do the rbind yet
+# to allow apt to install stuff during the debootstrap process
+#fBINDDEV
 
 tmux send-keys -t "${PANE_RUN}" "
 cd /tmp
@@ -51,10 +56,6 @@ mkdir slash
 
 mkdir slash/debootstrap
 mount -t tmpfs none slash/debootstrap
-
-# in GITPOD we can't write to /dev/ so don't rbind it yet to allow apt to install stuff
-#mkdir slash/dev
-#mount --rbind /dev/ slash/dev
 
 # create tmpfs scripts
 
