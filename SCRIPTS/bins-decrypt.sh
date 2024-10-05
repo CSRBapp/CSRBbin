@@ -1,18 +1,28 @@
 #!/usr/bin/env bash
 
 read -p "> " PASSWORD
+
+if [ -z ${PASSWORD} ]
+then
+	echo PASSWORD IS EMPTY
+	exit -1
+fi
+
 PASSWORDHASH=`echo -n ${PASSWORD} | sha512sum | awk '{ print $1 }'`
 
 echo "PASSWORD: ${PASSWORD}"
 echo "DECRYPTION PASSWORD: ${PASSWORDHASH}"
 
-for libenc in *.so.enc
+FILES=$(find . -maxdepth 1 -type f -name "*.enc")
+if [ -z "$FILES" ]; then exit 0; fi
+
+for ef in ${FILES}
 do
-	lib=${libenc%.enc}
-	echo "Decrypting ${lib}"
+	f=${ef%.enc}
+	echo "Decrypting ${ef} -> ${f}"
 	openssl enc -d \
 		-aes-256-cbc -md sha512 -pbkdf2 \
 		-pass pass:${PASSWORDHASH} \
-		-in $libenc | \
-		gunzip -c > $lib
+		-in $ef | \
+		gunzip -c > $f
 done
