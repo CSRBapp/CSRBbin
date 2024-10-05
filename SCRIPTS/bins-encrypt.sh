@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-read -p "> " PASSWORD
+if [ -z "$1" ]
+then
+	read -p "> " PASSWORD
+else
+	PASSWORD="$1"
+fi
 
 if [ -z ${PASSWORD} ]
 then

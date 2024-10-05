@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-read -p "> " PASSWORD
+if [ -z "$1" ]
+then
+	read -p "> " PASSWORD
+else
+	PASSWORD="$1"
+fi
 
 if [ -z ${PASSWORD} ]
 then
@@ -24,5 +29,5 @@ do
 		-aes-256-cbc -md sha512 -pbkdf2 \
 		-pass pass:${PASSWORDHASH} \
 		-in $ef | \
-		gunzip -c > $f
+		gunzip -c > $f && chmod u+x $f
 done
